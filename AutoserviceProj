@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Автомастерская Премиум — ремонт и обслуживание авто</title>
+  <meta name="description" content="Современный автосервис: диагностика, ТО, шиномонтаж, замена масла, автоэлектрика. Онлайн-запись и статус ремонта." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+  <a class="skip" href="#main">К основному содержимому</a>
+  
+  <header>
+    <div class="container topbar" role="banner">
+      <div class="brand">
+        <span class="brand__logo" aria-hidden="true" title="Логотип">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h2l2 7h10l2-7h2l-1 4h2v2h-3l-1 3H8l-1-3H4v-2h2l-1-4zm6-8 1-2h4l1 2 4 5H5l4-5z"/></svg>
+        </span>
+        <span class="brand__name">Автомастерская Премиум</span>
+      </div>
+      <nav aria-label="Основная навигация">
+        <ul>
+          <li><a class="nav__link" href="#services">Услуги</a></li>
+          <li><a class="nav__link" href="#pricing">Цены</a></li>
+          <li><a class="nav__link" href="#booking" aria-current="page">Бронирование</a></li>
+          <li><a class="nav__link" href="#reviews">Отзывы</a></li>
+          <li><a class="nav__link" href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="actions" role="group" aria-label="Действия">
+        <a class="btn btn--ghost" href="tel:+375290000000" aria-label="Позвонить в автосервис">Позвонить</a>
+        <a class="btn btn--primary" href="#booking">Записаться</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero__inner">
+        <div>
+          <h1 id="hero-title">Современный автосервис: быстро, честно, с гарантией</h1>
+          <p>Диагностика, ТО, шиномонтаж, автоэлектрика. Онлайн-запись и прозрачный статус ремонта в личном кабинете.</p>
+          <div class="badges" role="list" aria-label="Преимущества">
+            <span class="badge" role="listitem">⚡ Срочные слоты сегодня</span>
+            <span class="badge" role="listitem">🛡️ Гарантия 12 месяцев</span>
+            <span class="badge" role="listitem">💳 Оплата онлайн</span>
+          </div>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#booking">Записаться онлайн</a>
+            <a class="btn" href="#pricing">Рассчитать стоимость</a>
+          </div>
+        </div>
+        <figure class="hero__media" aria-labelledby="media-caption">
+          <picture>
+            <source srcset="https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1200&auto=format&fit=crop" media="(min-width: 960px)">
+            <img src="https://images.unsplash.com/photo-1580117263380-48c8dcc3bc91?q=80&w=800&auto=format&fit=crop" alt="Механик работает у автомобиля в сервисе"/>
+          </picture>
+          <figcaption id="media-caption" class="hero__stat">Свободно слотов сегодня: <strong>5</strong></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="services" aria-labelledby="services-title">
+      <div class="container">
+        <h2 id="services-title">Популярные услуги</h2>
+        <div class="grid grid--3" role="list">
+          <article class="card service" role="listitem">
+            <div class="service__icon" aria-hidden="true">🔧</div>
+            <div>
+              <h3>Диагностика</h3>
+              <p>Компьютерная проверка узлов и агрегатов. Время — ~45 мин.</p>
+            </div>
+          </article>
+          <article class="card service" role="listitem">
+            <div class="service__icon" aria-hidden="true">🛢️</div>
+            <div>
+              <h3>Замена масла</h3>
+              <p>Оригинальные масла и фильтры. Гарантия на работы.</p>
+            </div>
+          </article>
+          <article class="card service" role="listitem">
+            <div class="service__icon" aria-hidden="true">🛞</div>
+            <div>
+              <h3>Шиномонтаж</h3>
+              <p>Балансировка, ремонт проколов, сезонная смена.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <h2 id="pricing-title">Цены</h2>
+        <div class="grid grid--3">
+          <article class="card" aria-labelledby="p1-title">
+            <h3 id="p1-title">Базовая диагностика</h3>
+            <p><strong>от 1 500 ₽</strong> · 45 мин</p>
+          </article>
+          <article class="card" aria-labelledby="p2-title">
+            <h3 id="p2-title">Замена масла</h3>
+            <p><strong>от 1 200 ₽</strong> · 30 мин</p>
+          </article>
+          <article class="card" aria-labelledby="p3-title">
+            <h3 id="p3-title">Шиномонтаж</h3>
+            <p><strong>от 1 000 ₽</strong> · 40 мин</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="slots-title">
+      <div class="container">
+        <h2 id="slots-title">Ближайшие свободные слоты</h2>
+        <div class="slots" role="list">
+          <div class="slot" role="listitem">Сегодня <time datetime="2025-09-25T15:30">15:30</time></div>
+          <div class="slot" role="listitem">Сегодня <time datetime="2025-09-25T17:00">17:00</time></div>
+          <div class="slot" role="listitem">Сегодня <time datetime="2025-09-25T18:30">18:30</time></div>
+          <div class="slot" role="listitem">Завтра <time datetime="2025-09-26T10:00">10:00</time></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" aria-labelledby="reviews-title">
+      <div class="container">
+        <h2 id="reviews-title">Отзывы клиентов</h2>
+        <div class="grid grid--2">
+          <article class="card review" aria-label="Отзыв Анна">
+            <div class="stars" aria-hidden="true">★★★★★</div>
+            <p>Очень быстро приняли и сделали замену масла. Цены адекватные, персонал вежливый.</p>
+            <footer>Анна · <time datetime="2025-09-10">10 сен 2025</time></footer>
+          </article>
+          <article class="card review" aria-label="Отзыв Дмитрий">
+            <div class="stars" aria-hidden="true">★★★★☆</div>
+            <p>Диагностика помогла найти проблему с электрикой. Удобная запись онлайн.</p>
+            <footer>Дмитрий · <time datetime="2025-08-29">29 авг 2025</time></footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="booking" aria-labelledby="booking-title">
+      <div class="container">
+        <div class="grid grid--2">
+          <div>
+            <h2 id="booking-title">Онлайн-запись</h2>
+            <form action="#" method="post" aria-describedby="booking-help">
+              <p id="booking-help" style="color:var(--muted); margin:0">Заполните форму, мы подтвердим бронь по SMS/Email.</p>
+
+              <label for="service">
+                Услуга
+                <select id="service" name="service" required>
+                  <option value="" disabled selected>Выберите услугу</option>
+                  <option>Диагностика</option>
+                  <option>Замена масла</option>
+                  <option>Шиномонтаж</option>
+                </select>
+              </label>
+
+              <label for="car">
+                Автомобиль
+                <input id="car" name="car" type="text" placeholder="Марка и модель" required>
+              </label>
+
+              <label for="date">
+                Дата и время
+                <input id="date" name="date" type="datetime-local" required>
+              </label>
+
+              <label for="phone">
+                Телефон
+                <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+375 (29) 123-45-67" required>
+              </label>
+
+              <label for="comment">
+                Комментарий (необязательно)
+                <textarea id="comment" name="comment" rows="3" placeholder="VIN, приметы неисправности и т.п."></textarea>
+              </label>
+
+              <div style="display:flex; gap:10px; align-items:center">
+                <button type="submit" class="btn btn--primary">Записаться</button>
+                <small aria-live="polite">Ответим в течение 15 минут в рабочее время</small>
+              </div>
+            </form>
+          </div>
+          <aside aria-labelledby="aside-contact-title">
+            <h2 id="aside-contact-title" style="margin-top:0">Контакты</h2>
+            <address>
+              г. Гродно, ул. Понемуньская, 10<br>
+              Пн–Сб 09:00–20:00, Вс 10:00–18:00<br>
+              Тел.: <a href="tel:+375290000000">+375 29 000‑00‑00</a><br>
+              WhatsApp: <a href="#">написать</a>
+            </address>
+            <div class="card" aria-label="Как добраться">
+  <strong>Как добраться</strong>
+  <p class="muted">От площадки ГАИ — 7 минут пешком.</p>
+
+  <a class="map-link"
+     href="https://www.google.com/maps/?q=53.663156, 23.870302" 
+     target="_blank" 
+     rel="noopener">
+    <img src="https://share.google/5LCxPCjmkWPtBeYw5"
+         alt="Карта расположения сервиса (откроется Google Maps)"
+         loading="lazy"
+         width="600"
+         height="280"
+         class="map-img" />
+  </a>
+</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer__cols" role="contentinfo">
+      <div class="footer__brand">
+        <strong>Автомастерская Премиум</strong>
+        <p>Надёжный сервис с прозрачными ценами и гарантией на работы.</p>
+      </div>
+      <nav aria-label="Служебная навигация">
+        <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px">
+          <li><a href="#services">Услуги</a></li>
+          <li><a href="#pricing">Цены</a></li>
+          <li><a href="#booking">Бронирование</a></li>
+          <li><a href="#reviews">Отзывы</a></li>
+          <li><a href="#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div>
+        <small>© 2025 — ИП «Автомастерская Премиум»<br>ИНН 0000000000 · ОГРНИП 000000000000000</small>
+      </div>
+    </div>
+  </footer>
+  <button id="to-top" class="to-top" aria-label="Наверх">↑</button>
+  <script src="/scripts/app.js" defer></script>
+</body>
+</html>
+
+# Web-app
+# Web-app
