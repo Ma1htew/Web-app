@@ -1,0 +1,24 @@
+{
+  "name": "web-app",
+  "version": "1.0.0",
+  "description": "Проект по теме Автосервис.\r Команда: Кервяк Д. Демша А. Мишкель М.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ma1htew/Web-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ma1htew/Web-app/issues"
+  },
+  "homepage": "https://github.com/Ma1htew/Web-app#readme",
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  }
+}
