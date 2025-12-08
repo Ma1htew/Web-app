@@ -157,49 +157,63 @@
     </section>
 
     <section id="booking" aria-labelledby="booking-title">
-      <div class="container">
-        <div class="grid grid--2">
-          <div>
-            <h2 id="booking-title">Онлайн-запись</h2>
-            <form action="#" method="post" aria-describedby="booking-help">
-              <p id="booking-help" style="color:var(--muted); margin:0">Заполните форму, мы подтвердим бронь по SMS/Email.</p>
+  <div class="container">
+    <div class="grid grid--2">
+      <div>
+        <h2 id="booking-title">Онлайн-запись</h2>
 
-              <label for="service">
-                Услуга
-                <select id="service" name="service" required>
-                  <option value="" disabled selected>Выберите услугу</option>
-                  <option>Диагностика</option>
-                  <option>Замена масла</option>
-                  <option>Шиномонтаж</option>
-                </select>
-              </label>
+        <form id="booking-form" action="/booking" method="POST" aria-describedby="booking-help">
+          <p id="booking-help" style="color:var(--muted); margin:0">
+            Заполните форму, мы подтвердим бронь по SMS/Email.
+          </p>
 
-              <label for="car">
-                Автомобиль
-                <input id="car" name="car" type="text" placeholder="Марка и модель" required>
-              </label>
+          <label for="name">
+            Ваше имя
+            <input id="name" name="name" type="text" placeholder="Ваше имя" required>
+          </label>
 
-              <label for="date">
-                Дата и время
-                <input id="date" name="date" type="datetime-local" required>
-              </label>
+          <label for="service">
+            Услуга
+            <select id="service" name="service" required>
+              <option value="" disabled selected>Выберите услугу</option>
+              <option>Диагностика</option>
+              <option>Замена масла</option>
+              <option>Шиномонтаж</option>
+            </select>
+          </label>
 
-              <label for="phone">
-                Телефон
-                <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+375 (29) 123-45-67" required>
-              </label>
+          <label for="car">
+            Автомобиль
+            <input id="car" name="car" type="text" placeholder="Марка и модель" required>
+          </label>
 
-              <label for="comment">
-                Комментарий (необязательно)
-                <textarea id="comment" name="comment" rows="3" placeholder="VIN, приметы неисправности и т.п."></textarea>
-              </label>
+          <label for="dateTime">
+            Дата и время
+            <input id="dateTime" name="dateTime" type="datetime-local" required>
+          </label>
 
-              <div style="display:flex; gap:10px; align-items:center">
-                <button type="submit" class="btn btn--primary">Записаться</button>
-                <small aria-live="polite">Ответим в течение 15 минут в рабочее время</small>
-              </div>
-            </form>
+          <label for="phone">
+            Телефон
+            <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+375 (29) 123-45-67" required>
+          </label>
+
+          <label for="comment">
+            Комментарий (необязательно)
+            <textarea id="comment" name="comment" rows="3" placeholder="VIN, приметы неисправности и т.п."></textarea>
+          </label>
+
+          <div style="display:flex; gap:10px; align-items:center">
+            <button type="submit" class="btn btn--primary">Записаться</button>
+            <small aria-live="polite">Ответим в течение 15 минут в рабочее время</small>
           </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/scripts/booking.js"></script>
+
           <aside aria-labelledby="aside-contact-title">
             <h2 id="aside-contact-title" style="margin-top:0">Контакты</h2>
             <address>

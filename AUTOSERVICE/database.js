@@ -26,3 +26,19 @@ db.run(`
 `);
 
 module.exports = db;
+
+// Таблица записей клиентов
+db.run(`
+  CREATE TABLE IF NOT EXISTS appointments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    phone TEXT,
+    car TEXT,
+    service TEXT,
+    date TEXT,
+    time TEXT,
+    comment TEXT,
+    status TEXT DEFAULT 'pending'
+  )
+`);
+

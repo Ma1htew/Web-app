@@ -1,85 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Личный кабинет — Автомастерская Премиум</title>
+  <meta charset="UTF-8">
+  <title>Вход / Регистрация</title>
   <link rel="stylesheet" href="/styles/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="/scripts/app.js" defer></script>
+  <style>
+    /* Дополнительные стили только для этой страницы */
+
+    .auth-wrapper {
+      max-width: 420px;
+      margin: 60px auto;
+      padding: 24px;
+      background: var(--panel);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .auth-tab.active {
+      background: var(--accent);
+      border-color: var(--accent-700);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    form {
+      display: none;
+    }
+
+    form.active {
+      display: grid;
+      gap: 14px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+    }
+  </style>
 </head>
-
 <body>
-  <header>
-    <div class="container topbar">
-      <div class="brand">
-        <span class="brand__logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M3 13h2l2 7h10l2-7h2l-1 4h2v2h-3l-1 3H8l-1-3H4v-2h2l-1-4zm6-8 1-2h4l1 2 4 5H5l4-5z"/></svg>
-        </span>
-        <span class="brand__name">Автомастерская Премиум</span>
+
+<header>
+  <div class="container topbar">
+    <a class="brand" href="/">
+      <div class="brand__logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zm0 7.75L4 7l8-4 8 4-8 2.75zM2 17l10 5 10-5" fill="white"/>
+        </svg>
       </div>
-      <nav>
-        <a href="/auto.html" class="btn btn--ghost">На главную</a>
-      </nav>
+      <span class="brand__name">AutoService</span>
+    </a>
+  </div>
+</header>
+
+<main class="container">
+  <div class="auth-wrapper">
+
+    <!-- Переключатели -->
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="login">Вход</div>
+      <div class="auth-tab" data-tab="register">Регистрация</div>
     </div>
-  </header>
 
-  <main style="display:grid;place-items:center;min-height:100vh;padding:40px">
-    <div class="card" style="max-width:420px;width:100%;display:grid;gap:16px">
-      <div style="display:flex;gap:4px;justify-content:center;border-bottom:1px solid var(--border);padding-bottom:8px">
-        <button id="tab-login" class="btn btn--ghost" style="flex:1">Вход</button>
-        <button id="tab-register" class="btn btn--ghost" style="flex:1">Регистрация</button>
-      </div>
+    <!-- Форма входа -->
+    <form id="login-form" class="active" method="POST" action="/login">
+      <label>
+        Email:
+        <input type="email" name="email" required>
+      </label>
+      <label>
+        Пароль:
+        <input type="password" name="password" required>
+      </label>
+      <button class="btn btn--primary" type="submit">Войти</button>
+    </form>
 
-      <form id="login-form" action="/login" method="post">
-        <label>Email или телефон
-          <input type="text" name="login" required>
-        </label>
-        <label>Пароль
-          <input type="password" name="password" required>
-        </label>
-        <button type="submit" class="btn btn--primary">Войти</button>
-      </form>
+    <!-- Форма регистрации -->
+    <form id="register-form" method="POST" action="/register">
+      <label>
+        Имя:
+        <input type="text" name="name" required>
+      </label>
+      <label>
+        Email:
+        <input type="email" name="email" required>
+      </label>
+      <label>
+        Пароль:
+        <input type="password" name="password" required>
+      </label>
+      <button class="btn btn--primary" type="submit">Зарегистрироваться</button>
+    </form>
 
-      <form id="register-form" action="/register" method="post" style="display:none">
-        <label>Имя
-          <input type="text" name="name" required>
-        </label>
-        <label>Email
-          <input type="email" name="email" required>
-        </label>
-        <label>Телефон
-          <input type="tel" name="phone" required>
-        </label>
-        <label>Пароль
-          <input type="password" name="password" required>
-        </label>
-        <button type="submit" class="btn btn--primary">Зарегистрироваться</button>
-      </form>
-    </div>
-  </main>
+  </div>
+</main>
 
-  <script>
-    const loginTab = document.getElementById('tab-login');
-    const regTab = document.getElementById('tab-register');
-    const loginForm = document.getElementById('login-form');
-    const regForm = document.getElementById('register-form');
+<script src="/scripts/auth.js"></script>
 
-    loginTab.onclick = () => {
-      loginForm.style.display = 'grid';
-      regForm.style.display = 'none';
-      loginTab.classList.add('btn--primary');
-      regTab.classList.remove('btn--primary');
-    };
-
-    regTab.onclick = () => {
-      loginForm.style.display = 'none';
-      regForm.style.display = 'grid';
-      regTab.classList.add('btn--primary');
-      loginTab.classList.remove('btn--primary');
-    };
-  </script>
 </body>
 </html>
