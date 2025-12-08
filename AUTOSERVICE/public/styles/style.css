@@ -421,9 +421,6 @@ footer {
   transform: translateY(-4px); 
 }
 
-/* ========== АДАПТИВНОСТЬ ========== */
-
-/* Показываем иконки + скрываем текстовые кнопки на мобильных */
 @media (max-width: 640px) {
   .actions > .btn { display: none !important; }
   .actions__icon { display: grid !important; }
