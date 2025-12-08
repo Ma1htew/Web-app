@@ -158,7 +158,12 @@ function handleBooking(req, res) {
   req.on('data', chunk => body += chunk);
 
   req.on('end', () => {
+
+    console.log('RAW FORM DATA:', body); //afsgrdhgfndgs
+
     const data = querystring.parse(body);
+
+    console.log('PARSED FORM DATA:', data); //dfghgdfsfghn
 
     // Разделяем datetime на дату и время
     const [date, time] = data.dateTime.split("T");
