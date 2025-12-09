@@ -1,65 +1,157 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Панель работника</title>
-  <link rel="stylesheet" href="/styles/worker.css">
-</head>
 
+  <!-- Подключаем стиль, который используется на главной -->
+  <link rel="stylesheet" href="/styles/style.css">
+
+  <style>
+    /* Контейнер */
+    .worker-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    /* Заголовок */
+    .worker-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Фильтры */
+    .filters {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .filters label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
+
+    .filters input,
+    .filters select {
+      margin-top: 4px;
+    }
+
+    /* Карточка записи */
+    .appointment-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      transition: transform .2s ease;
+    }
+
+    .appointment-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-name {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .status {
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      text-transform: capitalize;
+    }
+
+    .status.pending { background: #1e293b; color: #eab308; }
+    .status.approved { background: #064e3b; color: #34d399; }
+    .status.rejected { background: #4c0519; color: #f43f5e; }
+
+    .card-row {
+      margin: 6px 0;
+      color: var(--muted);
+    }
+
+    .card-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+  </style>
+
+</head>
 <body>
-  <header class="header">
-    <h1>Панель работника</h1>
+
+  <header>
+    <div class="container topbar">
+      <div class="brand">
+        <div class="brand__logo">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M5 12l4-4m-4 4l4 4"/></svg>
+        </div>
+        <span class="brand__name">Автомастерская — панель работника</span>
+      </div>
+    </div>
   </header>
 
-  <main class="container">
+  <main class="worker-container">
 
-    <!-- Панель управления -->
-    <div class="controls">
+    <h1 class="worker-title">Панель работника</h1>
 
-      <!-- Поиск -->
-      <div class="control-block">
-        <label>Поиск по имени:</label>
-        <input type="text" id="search" placeholder="Введите имя клиента">
-      </div>
+    <!-- Фильтры -->
+    <div class="filters">
+      <label>
+        Поиск по имени:
+        <input type="text" id="searchName" placeholder="Введите имя">
+      </label>
 
-      <!-- Фильтр -->
-      <div class="control-block">
-        <label>Фильтр по статусу:</label>
-        <select id="statusFilter">
+      <label>
+        Фильтр по статусу:
+        <select id="filterStatus">
           <option value="all">Все</option>
-          <option value="new">Новые</option>
-          <option value="taken">В работе</option>
-          <option value="denied">Отказано</option>
-          <option value="done">Выполнено</option>
+          <option value="pending">В ожидании</option>
+          <option value="approved">В работе</option>
+          <option value="rejected">Отказано</option>
         </select>
-      </div>
+      </label>
 
-      <!-- Сортировка -->
-      <div class="control-block">
-        <label>Сортировка по дате:</label>
+      <label>
+        Сортировка по дате:
         <select id="sortDate">
-          <option value="newest">Сначала новые</option>
-          <option value="oldest">Сначала старые</option>
+          <option value="new">Сначала новые</option>
+          <option value="old">Сначала старые</option>
         </select>
-      </div>
-
+      </label>
     </div>
 
-    <!-- Таблица записей -->
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Имя</th>
-          <th>Телефон</th>
-          <th>Авто</th>
-          <th>Услуга</th>
-          <th>Дата</th>
-          <th>Статус</th>
-          <th>Действия</th>
-        </tr>
-      </thead>
-      <tbody id="appointmentsTable"></tbody>
-    </table>
+    <!-- Контейнер, куда будут загружаться карточки -->
+    <div id="appointmentsList"></div>
 
   </main>
 

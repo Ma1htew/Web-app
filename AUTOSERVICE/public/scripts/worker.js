@@ -1,82 +1,54 @@
-let appointments = [];
+async function loadAppointments() {
+    const response = await fetch("/api/appointments");
+    const appointments = await response.json();
 
-// Загружаем данные с сервера
-async function loadData() {
-  const res = await fetch("/api/appointments");
-  appointments = await res.json();
-  applyFilters();
+    renderCards(appointments);
 }
 
-// Фильтрация + сортировка + поиск
-function applyFilters() {
-  let filtered = [...appointments];
+function renderCards(list) {
+    const container = document.getElementById("appointmentsList");
+    container.innerHTML = "";
 
-  // Поиск по имени
-  const search = document.getElementById("search").value.toLowerCase();
-  filtered = filtered.filter(a => a.name.toLowerCase().includes(search));
+    list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "appointment-card";
 
-  // Фильтр по статусу
-  const status = document.getElementById("statusFilter").value;
-  if (status !== "all") {
-    filtered = filtered.filter(a => a.status === status);
-  }
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="card-name">${item.name}</div>
+                <div class="status ${item.status}">
+                    ${item.status === "pending" ? "В ожидании" :
+                       item.status === "approved" ? "В работе" :
+                       "Отказано"}
+                </div>
+            </div>
 
-  // Сортировка по дате
-  const sort = document.getElementById("sortDate").value;
-  
-  filtered.sort((a, b) => {
-    const da = new Date(a.date + " " + a.time);
-    const db = new Date(b.date + " " + b.time);
-    return sort === "newest" ? db - da : da - db;
-  });
+            <div class="card-row"><b>Телефон:</b> ${item.phone}</div>
+            <div class="card-row"><b>Авто:</b> ${item.car}</div>
+            <div class="card-row"><b>Услуга:</b> ${item.service}</div>
+            <div class="card-row"><b>Дата:</b> ${item.date} ${item.time}</div>
 
-  renderTable(filtered);
+            <div class="card-row"><b>Комментарий:</b> ${item.comment || "—"}</div>
+
+            <div class="card-actions">
+                <button class="btn btn--primary" onclick="setStatus(${item.id}, 'approved')">Взять в работу</button>
+                <button class="btn btn--ghost" onclick="setStatus(${item.id}, 'rejected')">Отказать</button>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
 }
 
-// Вывод таблицы
-function renderTable(rows) {
-  const table = document.getElementById("appointmentsTable");
-  table.innerHTML = "";
+async function setStatus(id, status) {
+    await fetch("/api/update-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status })
+    });
 
-  rows.forEach(r => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>${r.name}</td>
-      <td>${r.phone}</td>
-      <td>${r.car}</td>
-      <td>${r.service}</td>
-      <td>${r.date} ${r.time}</td>
-      <td><span class="status ${r.status}">${r.status}</span></td>
-      <td>
-        <button class="btn btn-take"   onclick="updateStatus(${r.id}, 'taken')">Взять</button>
-        <button class="btn btn-deny"   onclick="updateStatus(${r.id}, 'denied')">Отказать</button>
-        <button class="btn btn-done"   onclick="updateStatus(${r.id}, 'done')">Готово</button>
-      </td>
-    `;
-
-    table.appendChild(tr);
-  });
+    loadAppointments(); // автообновление
 }
 
-// Обновление статуса на сервере
-async function updateStatus(id, status) {
-  await fetch("/api/update-status", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `id=${id}&status=${status}`
-  });
-
-  loadData();
-}
-
-// Обработчики UI
-document.getElementById("search").oninput = applyFilters;
-document.getElementById("statusFilter").onchange = applyFilters;
-document.getElementById("sortDate").onchange = applyFilters;
-
-// Автообновление каждые 3 секунды
-setInterval(loadData, 3000);
-
-// Первый запуск
-loadData();
+setInterval(loadAppointments, 3000); // автообновление каждые 3 сек
+loadAppointments();
