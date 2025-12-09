@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f3f4f6;
+}
+
+.header {
+  background: #0d6efd;
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.controls {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.control-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-block input,
+.control-block select {
+  padding: 7px;
+  font-size: 15px;
+}
+
+.table {
+  width: 100%;
+  background: white;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th, .table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table tr:hover {
+  background: #eef4ff;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  display: inline-block;
+}
+
+.status.new { background: #ffe08a; }
+.status.taken { background: #9acdff; }
+.status.denied { background: #ff9f9f; }
+.status.done { background: #99e29d; }
+
+.btn {
+  padding: 6px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.btn-take { background: #0d6efd; color: white; }
+.btn-deny { background: #dc3545; color: white; }
+.btn-done { background: #28a745; color: white; }

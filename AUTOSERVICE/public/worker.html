@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Панель работника</title>
+  <link rel="stylesheet" href="/styles/worker.css">
+</head>
+
+<body>
+  <header class="header">
+    <h1>Панель работника</h1>
+  </header>
+
+  <main class="container">
+
+    <!-- Панель управления -->
+    <div class="controls">
+
+      <!-- Поиск -->
+      <div class="control-block">
+        <label>Поиск по имени:</label>
+        <input type="text" id="search" placeholder="Введите имя клиента">
+      </div>
+
+      <!-- Фильтр -->
+      <div class="control-block">
+        <label>Фильтр по статусу:</label>
+        <select id="statusFilter">
+          <option value="all">Все</option>
+          <option value="new">Новые</option>
+          <option value="taken">В работе</option>
+          <option value="denied">Отказано</option>
+          <option value="done">Выполнено</option>
+        </select>
+      </div>
+
+      <!-- Сортировка -->
+      <div class="control-block">
+        <label>Сортировка по дате:</label>
+        <select id="sortDate">
+          <option value="newest">Сначала новые</option>
+          <option value="oldest">Сначала старые</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Таблица записей -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Имя</th>
+          <th>Телефон</th>
+          <th>Авто</th>
+          <th>Услуга</th>
+          <th>Дата</th>
+          <th>Статус</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody id="appointmentsTable"></tbody>
+    </table>
+
+  </main>
+
+  <script src="/scripts/worker.js"></script>
+</body>
+</html>
