@@ -219,6 +219,7 @@
 </section>
 
 <script src="/scripts/booking.js"></script>
+<script src="/scripts/auth-check.js" defer></script>
 
           <aside aria-labelledby="aside-contact-title">
             <h2 id="aside-contact-title" style="margin-top:0">Контакты</h2>
@@ -232,11 +233,29 @@
   <strong>Как добраться</strong>
   <p class="muted">От площадки ГАИ — 7 минут пешком.</p>
 
-  <a class="map-link"
-     href="https://www.google.com/maps/?q=53.663156, 23.870302" 
-     target="_blank" 
-     rel="noopener">
-  </a>
+  <div style="margin: 25px 0; text-align: center;">
+    <a href="https://yandex.ru/maps/?ll=23.870302%2C53.663156&z=17&pt=23.870302,53.663156"
+       target="_blank"
+       rel="noopener"
+       style="display: inline-block; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.4); transition: transform .2s;">
+      <img 
+        src="https://static-maps.yandex.ru/1.x/?ll=23.870302,53.663156&z=16&size=450,450&l=map&pt=23.870302,53.663156,pm2rdm"
+        alt="Карта проезда"
+        width="250"
+        height="250"
+        style="display: block; border-radius: 15px;">
+    </a>
+  </div>
+
+  <p style="text-align:center; margin: 10px 0 0;">
+    <a href="https://yandex.ru/maps/?ll=23.870302%2C53.663156&z=17&pt=23.870302,53.663156"
+       target="_blank" 
+       rel="noopener"
+       style="color: var(--accent); font-weight: 700; font-size: 0.9rem;">
+      Открыть полную карту →
+    </a>
+  </p>
+</div>
 </div>
           </aside>
         </div>
