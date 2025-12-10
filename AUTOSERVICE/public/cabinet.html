@@ -217,24 +217,40 @@
     </div>
   </main>
 
-  <!-- Футер такой же -->
-  <footer>
-    <div class="container footer__cols" role="contentinfo">
-      <div class="footer__brand">
-        <strong>Автомастерская</strong>
-        <p>Надёжный сервис с прозрачными ценами и гарантией на работы.</p>
-      </div>
-      <nav aria-label="Служебная навигация">
-        <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px">
-          <li><a href="auto.html#services">Услуги</a></li>
-          <li><a href="auto.html#pricing">Цены</a></li>
-          <li><a href="auto.html#booking">Бронирование</a></li>
-          <li><a href="auto.html#reviews">Отзывы</a></li>
-          <li><a href="auto.html#contacts">Контакты</a></li>
-        </ul>
-      </nav>
-      <div>
-        <small>© 2025 — ИП «Автомастерская»<br>ИНН 0000000000 · ОГРНИП 000000000000000</small>
+<script>
+fetch("/api/check-auth")
+  .then(res => res.json())
+  .then(data => {
+    if (!data.authorized) {
+      window.location.href = "/auth.html";
+    }
+  });
+
+
+  // Загрузка данных пользователя
+  const userName = localStorage.getItem("userName") || "Клиент";
+  const userPhone = localStorage.getItem("userPhone") || "Не указан";
+  const userEmail = localStorage.getItem("userEmail") || "Не указан";
+
+  document.getElementById("user-name").textContent = userName;
+  document.getElementById("display-name").textContent = userName;
+  document.getElementById("display-phone").textContent = userPhone;
+  document.getElementById("display-email").textContent = userEmail;
+
+  // Пример записей (в реальности — с бэкенда)
+  const bookings = JSON.parse(localStorage.getItem("userBookings") || "[]");
+  const list = document.getElementById("bookings-list");
+
+  if (bookings.length === 0) {
+    list.innerHTML = `<p style="color: var(--muted);">У вас пока нет записей</p>`;
+  } else {
+    list.innerHTML = bookings.map(b => `
+      <div class="booking-item">
+        <strong>${b.service}</strong><br>
+        ${b.car} · ${b.date} в ${b.time} · 
+        <span class="${b.status === 'done' ? 'status-done' : 'status-confirmed'}">
+          ${b.status === 'done' ? 'Выполнено' : 'Подтверждено'}
+        </span>
       </div>
     </div>
   </footer>
