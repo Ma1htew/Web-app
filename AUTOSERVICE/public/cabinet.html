@@ -62,200 +62,175 @@
         <a href="auto.html#booking" class="actions__icon" aria-label="Записаться">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
         </a>
-        <!-- Иконка кабинета теперь активна (можно убрать ссылку или оставить) -->
-        <a href="cabinet.html" class="actions__icon" aria-label="Личный кабинет" aria-current="page">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-        </a>
+        <a href="auth.html" class="actions__icon" aria-label="Личный кабинет" id="cabinet-link">
+  <!-- Иконка по умолчанию — "вход" -->
+  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
+    <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
+  </svg>
+</a>
       </div>
     </div>
   </header>
 
   <main id="main" tabindex="-1" style="padding-top: 3rem; padding-bottom: 4rem; background: var(--bg); min-height: 80vh;">
-    <div class="container">
+  <div class="container">
 
-      <!-- Приветствие и аватар -->
-      <section class="grid grid--2" style="align-items: center; margin-bottom: 3rem; gap: 2rem;">
-        <div class="profile-avatar">ИП</div>
-        <div>
-          <h1 style="margin:0; font-size: 2rem;">Добро пожаловать, Иван Петров!</h1>
-          <p style="color: var(--muted); margin: 0.5rem 0 0;">+375 (29) 123-45-67 • ivan@example.com</p>
-        </div>
-      </section>
+    <!-- Приветствие — будет заполняться динамически -->
+    <section class="grid grid--2" style="align-items: center; margin-bottom: 3rem; gap: 2rem;">
+      <div class="profile-avatar" id="user-avatar">?</div>
+      <div>
+        <h1 style="margin:0; font-size: 2rem;" id="welcome-name">Загрузка...</h1>
+        <p style="color:var(--muted); margin: 0.5rem 0 0;" id="user-contact">• • •</p>
+      </div>
+    </section>
 
-      <!-- Блок статистики -->
-      <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:var(--primary);">3</strong><br>
-          <span style="color:var(--muted);">Активные записи</span>
-        </div>
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:#16a34a;">12</strong><br>
-          <span style="color:var(--muted);">Завершённых визитов</span>
-        </div>
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:#2563eb;">2</strong><br>
-          <span style="color:var(--muted);">Авто в профиле</span>
-        </div>
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:#f59e0b;">★ 4.9</strong><br>
-          <span style="color:var(--muted);">Ваш рейтинг</span>
-        </div>
+    <!-- Статистика — тоже динамически -->
+    <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:var(--primary);" id="active-count">0</strong><br>
+        <span style="color:var(--muted);">Активные записи</span>
+      </div>
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
+        <span style="color:var(--muted);">Завершённых визитов</span>
+      </div>
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
+        <span style="color:var(--muted);">Авто в профиле</span>
+      </div>
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:#f59e0b;">★ —</strong><br>
+        <span style="color:var(--muted);">Ваш рейтинг</span>
+      </div>
+    </div>
+
+    <!-- Текущие записи — будут подгружаться из базы -->
+    <section style="margin-bottom: 4rem;">
+      <h2 style="margin-bottom: 1.5rem;">Текущие и предстоящие записи</h2>
+      <div id="appointments-list" class="grid grid--1" style="gap: 1rem;">
+        <p style="text-align:center; color:var(--muted);">Загрузка ваших записей...</p>
       </div>
 
-      <!-- Текущие записи -->
-      <section style="margin-bottom: 4rem;">
-        <h2 style="margin-bottom: 1.5rem;">Текущие и предстоящие записи</h2>
+      <p style="text-align:center; margin-top:2rem;">
+        <a href="auto.html#booking" class="btn btn--primary">Записаться на новую услугу</a>
+      </p>
+    </section>
 
-        <div class="grid grid--1" style="gap: 1rem;">
-
-          <!-- Запись 1 -->
-          <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-            <div>
-              <strong>Skoda Octavia A7 • A123BC 79</strong><br>
-              <time datetime="2025-12-15T14:00">15 декабря 2025, 14:00</time> • Замена масла и фильтров
-            </div>
-            <div style="text-align:right;">
-              <span class="status status--in-progress">В работе</span><br>
-              <small style="color:var(--muted);">Осталось ~40 минут</small>
-            </div>
-          </article>
-
-          <!-- Запись 2 -->
-          <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-            <div>
-              <strong>Volkswagen Polo • X777XX 77</strong><br>
-              <time datetime="2025-12-18T10:30">18 декабря 2025, 10:30</time> • Шиномонтаж (зима)
-            </div>
-            <div style="text-align:right;">
-              <span class="status status--waiting">Ожидает</span>
-            </div>
-          </article>
-
-          <!-- Запись 3 (готово) -->
-          <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-            <div>
-              <strong>Skoda Octavia A7 • A123BC 79</strong><br>
-              <time datetime="2025-12-10T11:00">10 декабря 2025, 11:00</time> • Диагностика подвески
-            </div>
-            <div style="text-align:right;">
-              <span class="status status--ready">Готово к выдаче</span><br>
-              <a href="#" class="btn btn--primary" style="margin-top:0.5rem; font-size:0.9rem;">Оплатить онлайн (4 200 ₽)</a>
-            </div>
-          </article>
-
-        </div>
-
-        <p style="text-align:center; margin-top:2rem;">
-          <a href="auto.html#booking" class="btn btn--primary">Записаться на новую услугу</a>
-        </p>
-      </section>
-
-      <!-- История посещений (свёрнутая) -->
-      <section>
-        <h2 style="margin-bottom: 1rem;">История посещений</h2>
-        <details style="background:#fff; border-radius:8px; padding:1rem;">
-          <summary style="cursor:pointer; font-weight:600; margin-bottom:0.5rem;">Показать все 12 записей</summary>
-          <table style="width:100%; border-collapse:collapse; margin-top:1rem;">
-            <thead>
-              <tr style="text-align:left; color:var(--muted);">
-                <th style="padding:0.5rem 0;">Дата</th>
-                <th>Авто</th>
-                <th>Услуга</th>
-                <th>Сумма</th>
-                <th>Статус</th>
-              </tr>
-            </thead>
-            <tbody style="font-size:0.95rem;">
-              <tr>
-                <td style="padding:0.5rem 0;">05.11.2025</td>
-                <td>Skoda Octavia</td>
-                <td>ТО-60 000 км</td>
-                <td>18 500 ₽</td>
-                <td><span class="status status--completed">Выполнено</span></td>
-              </tr>
-              <tr>
-                <td style="padding:0.5rem 0;">12.09.2025</td>
-                <td>VW Polo</td>
-                <td>Шиномонтаж</td>
-                <td>4 800 ₽</td>
-                <td><span class="status status--completed">Выполнено</span></td>
-              </tr>
-              <!-- можно добавить ещё строк -->
-            </tbody>
-          </table>
-        </details>
-      </section>
-
-      <!-- Мои автомобили -->
-      <section style="margin-top: 4rem;">
-        <h2 style="margin-bottom: 1rem;">Мои автомобили</h2>
-        <div class="grid grid--3" style="gap:1rem;">
-          <div class="card" style="padding:1.5rem; text-align:center;">
-            <strong>Skoda Octavia A7</strong><br>
-            <small>A123BC 79 • 2019 г. • 1.8 TSI</small><br>
-            <small style="color:var(--muted);">Пробег: 87 400 км</small>
-          </div>
-          <div class="card" style="padding:1.5rem; text-align:center;">
-            <strong>Volkswagen Polo</strong><br>
-            <small>X777XX 77 • 2021 г. • 1.6 MPI</small><br>
-            <small style="color:var(--muted);">Пробег: 34 200 км</small>
-          </div>
-          <div class="card" style="padding:1.5rem; text-align:center; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-            <span style="font-size:3rem; color:#cbd5e1;">+</span>
-            <a href="#" style="margin-top:0.5rem;">Добавить автомобиль</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Кнопка выхода -->
-      <div style="margin-top: 4rem; text-align:center;">
-        <a href="#" style="color:var(--muted); text-decoration:underline;">Выйти из личного кабинета</a>
-      </div>
+    <!-- Кнопка выхода -->
+    <div style="margin-top: 4rem; text-align:center;">
+      <a href="auth.html" id="logout-btn" style="color:var(--muted); text-decoration:underline; cursor:pointer;">
+        Выйти из личного кабинета
+      </a>
+    </div>
+  </div>
+</main>
 
     </div>
   </main>
 
-<script>
-fetch("/api/check-auth")
-  .then(res => res.json())
-  .then(data => {
-    if (!data.authorized) {
-      window.location.href = "/auth.html";
-    }
-  });
-
-
-  // Загрузка данных пользователя
-  const userName = localStorage.getItem("userName") || "Клиент";
-  const userPhone = localStorage.getItem("userPhone") || "Не указан";
-  const userEmail = localStorage.getItem("userEmail") || "Не указан";
-
-  document.getElementById("user-name").textContent = userName;
-  document.getElementById("display-name").textContent = userName;
-  document.getElementById("display-phone").textContent = userPhone;
-  document.getElementById("display-email").textContent = userEmail;
-
-  // Пример записей (в реальности — с бэкенда)
-  const bookings = JSON.parse(localStorage.getItem("userBookings") || "[]");
-  const list = document.getElementById("bookings-list");
-
-  if (bookings.length === 0) {
-    list.innerHTML = `<p style="color: var(--muted);">У вас пока нет записей</p>`;
-  } else {
-    list.innerHTML = bookings.map(b => `
-      <div class="booking-item">
-        <strong>${b.service}</strong><br>
-        ${b.car} · ${b.date} в ${b.time} · 
-        <span class="${b.status === 'done' ? 'status-done' : 'status-confirmed'}">
-          ${b.status === 'done' ? 'Выполнено' : 'Подтверждено'}
-        </span>
+  <!-- Футер такой же -->
+  <footer>
+    <div class="container footer__cols" role="contentinfo">
+      <div class="footer__brand">
+        <strong>Автомастерская</strong>
+        <p>Надёжный сервис с прозрачными ценами и гарантией на работы.</p>
+      </div>
+      <nav aria-label="Служебная навигация">
+        <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px">
+          <li><a href="auto.html#services">Услуги</a></li>
+          <li><a href="auto.html#pricing">Цены</a></li>
+          <li><a href="auto.html#booking">Бронирование</a></li>
+          <li><a href="auto.html#reviews">Отзывы</a></li>
+          <li><a href="auto.html#contacts">Контакты</a></li>
+        </ul>
+      </nav>
+      <div>
+        <small>© 2025 — ИП «Автомастерская»<br>ИНН 0000000000 · ОГРНИП 000000000000000</small>
       </div>
     </div>
   </footer>
 
-  <button id="to-top" class="to-top" aria-label="Наверх">↑</button>
-  <script src="/scripts/app.js" defer></script>
+
+<script>
+  document.getElementById('logout-btn')?.addEventListener('click', e => {
+    e.preventDefault();
+    localStorage.setItem('isLoggedIn', 'false');  // важно!
+    localStorage.removeItem('isLoggedIn');        // и это тоже
+    window.location.replace('auth.html');
+  });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const getCookie = name => (document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null);
+  const userId = getCookie('user');
+
+  if (!userId) {
+    alert('Вы не авторизованы');
+    window.location.href = 'auth.html';
+    return;
+  }
+
+  try {
+    // Получаем пользователя
+    const userRes = await fetch(`/api/user?id=${userId}`);
+    const user = await userRes.json();
+
+    document.getElementById('welcome-name').textContent = `Добро пожаловать, ${user.name}!`;
+    document.getElementById('user-contact').textContent = user.email;
+    document.getElementById('user-avatar').textContent = user.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+
+    // Получаем ВСЕ записи и фильтруем по user_id
+    const apptRes = await fetch('/api/appointments');
+    const allAppointments = await apptRes.json();
+    const myAppointments = allAppointments.filter(a => a.user_id == userId);
+
+    // Статистика
+    document.getElementById('active-count').textContent = myAppointments.filter(a => a.status !== 'completed').length;
+    document.getElementById('completed-count').textContent = myAppointments.filter(a => a.status === 'completed').length;
+
+    // Рендер записей
+    const list = document.getElementById('appointments-list');
+    list.innerHTML = myAppointments.length === 0 
+      ? '<p style="text-align:center; color:var(--muted);">У вас пока нет записей</p>'
+      : '';
+
+    myAppointments.forEach(a => {
+      const date = new Date(a.date + 'T' + a.time);
+      const formatted = date.toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      const statusInfo = {
+        pending: ['Ожидает', 'status--waiting'],
+        'in-progress': ['В работе', 'status--in-progress'],
+        ready: ['Готово к выдаче', 'status--ready'],
+        completed: ['Выполнено', 'status--completed']
+      }[a.status] || ['Ожидает', 'status--waiting'];
+
+      list.innerHTML += `
+        <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <strong>${a.car}</strong><br>
+            <time>${formatted}</time> • ${a.service}
+            ${a.comment ? `<br><small style="color:var(--muted);">${a.comment}</small>` : ''}
+          </div>
+          <div style="text-align:right;">
+            <span class="status ${statusInfo[1]}">${statusInfo[0]}</span>
+          </div>
+        </article>
+      `;
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert('Ошибка соединения с сервером');
+  }
+});
+
+// Выход
+document.getElementById('logout-btn')?.addEventListener('click', e => {
+  e.preventDefault();
+  document.cookie = 'user=; Max-Age=0; path=/';
+  window.location.replace('auth.html');
+});
+</script>
 </body>
 </html>

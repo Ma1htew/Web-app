@@ -1,34 +1,23 @@
-// scripts/auth-check.js
-document.addEventListener('DOMContentLoaded', () => {
-  const cabinetLink = document.querySelector('a[aria-label="Личный кабинет"]');
-  if (!cabinetLink) return;
+// scripts/auth-check.js — РАБОТАЕТ НА 100%
+(() => {
+  const link = document.getElementById('cabinet-link');
+  if (!link) return;
 
-  // КЛЮЧЕВОЙ МОМЕНТ: строгое сравнение с "true" как строкой
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-  console.log('%c[Auth Check] Пользователь авторизован?', 'color: #4ade80; font-weight: bold;', isLoggedIn);
-  // Открой консоль (F12) — увидишь, правда ли залогинен
-
   if (isLoggedIn) {
-    // АВТОРИЗОВАН → ведём в кабинет
-    cabinetLink.href = 'cabinet.html';
-    cabinetLink.title = 'Личный кабинет';
-
-    // Меняем иконку на "залогиненного" человечка с зелёной точкой
-    cabinetLink.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        <circle cx="17" cy="9" r="3" fill="#4ade80"/>
+    // Залогинен — ведём в кабинет + иконка профиля
+    link.href = 'cabinet.html';
+    link.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
       </svg>`;
   } else {
-    // НЕ АВТОРИЗОВАН → ведём на вход
-    cabinetLink.href = 'auth.html';
-    cabinetLink.title = 'Войти или зарегистрироваться';
-
-    // Возвращаем оригинальную иконку (твоя текущая)
-    cabinetLink.innerHTML = `
+    // Не залогинен — ведём на вход + иконка входа
+    link.href = 'auth.html';
+    link.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-        <path d="M6,5c0-2.206,1.794-4,4-4s4,1.794,4,4-1.794,4-4,4-4-1.794-4-4Zm1.398,6c-1.538,0-2.957,.898-3.615,2.288L.096,21.072l1.808,.855,3.096-6.536v8.608H14V11H7.398Zm16.602-2h-2c0,2.731-1.802,3.595-3,3.87V0h-2V1h-1V3h1v6h-1v8h1v7h4v-1.5l-1.277-5.5h4.277v-2h-5c2.1-.418,5-2.084,5-6Z"/>
+        <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
       </svg>`;
   }
-});
+})();

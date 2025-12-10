@@ -41,4 +41,14 @@ db.run(`
     status TEXT DEFAULT 'pending'
   )
 `);
+// Добавляем поле user_id в таблицу appointments (если его ещё нет)
+db.run(`
+  ALTER TABLE appointments ADD COLUMN user_id INTEGER
+`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error("Ошибка добавления user_id:", err);
+  } else {
+    console.log("Поле user_id добавлено (или уже существует)");
+  }
+});
 

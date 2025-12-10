@@ -47,7 +47,7 @@ const server = http.createServer((req, res) => {
 
   // ---------- API: Проверка авторизации ----------
   if (req.url === "/api/check-auth" && req.method === "GET") {
-    return checkAuth(req, res); // FIX: добавлено условие метода
+    return checkAuth(req, res);
   }
 
   // ---------- Регистрация ----------
@@ -75,6 +75,27 @@ const server = http.createServer((req, res) => {
     return updateStatus(req, res);
   }
 
+  // ---------- НОВЫЙ РОУТ: Получить пользователя по ID ----------
+  if (req.url.startsWith("/api/user") && req.method === "GET") {
+    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const userId = url.searchParams.get("id");
+
+    if (!userId) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ error: "No user ID" }));
+    }
+
+    db.get("SELECT id, name, email FROM users WHERE id = ?", [userId], (err, user) => {
+      if (err || !user) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "User not found" }));
+      }
+      res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify(user));
+    });
+    return;
+  }
+
   // ---------- 404 ----------
   res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
   res.end("Страница не найдена");
@@ -85,16 +106,12 @@ const server = http.createServer((req, res) => {
 // ==============================
 function serveFile(relPath, contentType, res) {
   const filePath = path.join(publicDir, relPath);
-
   fs.readFile(filePath, (err, content) => {
     if (err) {
       res.writeHead(404);
       return res.end("Файл не найден");
     }
-
-    res.writeHead(200, {
-      "Content-Type": `${contentType}; charset=utf-8`,
-    });
+    res.writeHead(200, { "Content-Type": `${contentType}; charset=utf-8` });
     res.end(content);
   });
 }
@@ -104,28 +121,17 @@ function serveFile(relPath, contentType, res) {
 // ==============================
 function handleRegister(req, res) {
   let body = "";
-
   req.on("data", (chunk) => (body += chunk));
-
   req.on("end", () => {
     const { name, email, password } = querystring.parse(body);
-
     const sql = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
-
     db.run(sql, [name, email, password], function (err) {
       if (err) {
         res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
-        return res.end(`
-          <h2>Ошибка регистрации: email уже используется</h2>
-          <a href="/auth">Назад</a>
-        `);
+        return res.end(`<h2>Ошибка регистрации: email уже используется</h2><a href="/auth">Назад</a>`);
       }
-
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`
-        <h2>Регистрация успешна!</h2>
-        <a href="/auth">Перейти к входу</a>
-      `);
+      res.end(`<h2>Регистрация успешна!</h2><a href="/auth">Перейти к входу</a>`);
     });
   });
 }
@@ -135,27 +141,21 @@ function handleRegister(req, res) {
 // ==============================
 function handleLogin(req, res) {
   let body = "";
-
   req.on("data", (chunk) => (body += chunk));
-
   req.on("end", () => {
     const { email, password } = querystring.parse(body);
-
     const sql = `SELECT * FROM users WHERE email = ? AND password = ?`;
-
     db.get(sql, [email, password], (err, user) => {
       if (err || !user) {
         res.writeHead(401, { "Content-Type": "text/html; charset=utf-8" });
-        return res.end(`
-          <h2>Неверный email или пароль</h2>
-          <a href="/auth">Попробовать снова</a>
-        `);
+        return res.end(`<h2>Неверный email или пароль</h2><a href="/auth.html">Попробовать снова</a>`);
       }
-
-      // Сохраняем данные пользователя в cookie
       res.writeHead(302, {
-        "Set-Cookie": `user=${user.id}; HttpOnly; Path=/; Max-Age=86400`,
-        Location: user.role === "worker" ? "/worker.html" : "/cabinet.html",
+        "Set-Cookie": [
+          `user=${user.id}; Path=/; Max-Age=86400; HttpOnly; SameSite=None`,
+          `user=${user.id}; Path=/; Max-Age=86400; SameSite=Lax`
+        ],
+        "Location": "/cabinet.html",
       });
       res.end();
     });
@@ -168,16 +168,11 @@ function handleLogin(req, res) {
 function checkAuth(req, res) {
   const cookie = req.headers.cookie || "";
   const match = cookie.match(/user=(\d+)/);
-
   res.writeHead(200, { "Content-Type": "application/json" });
-
   if (!match) return res.end(JSON.stringify({ authorized: false }));
-
   const userId = match[1];
-
   db.get("SELECT * FROM users WHERE id = ?", [userId], (err, user) => {
     if (err || !user) return res.end(JSON.stringify({ authorized: false }));
-
     res.end(JSON.stringify({ authorized: true }));
   });
 }
@@ -187,39 +182,19 @@ function checkAuth(req, res) {
 // ==============================
 function handleBooking(req, res) {
   let body = "";
-
   req.on("data", (chunk) => (body += chunk));
-
   req.on("end", () => {
     const data = querystring.parse(body);
     const [date, time] = data.date.split("T");
-
-    const sql = `
-      INSERT INTO appointments (name, phone, car, service, date, time, comment)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    db.run(
-      sql,
-      [data.name, data.phone, data.car, data.service, date, time, data.comment],
-      (err) => {
-        if (err) {
-          res.writeHead(500, {
-            "Content-Type": "text/html; charset=utf-8",
-          });
-          return res.end(`
-            <h2>Ошибка: запись не сохранена</h2>
-            <a href="/">Назад</a>
-          `);
-        }
-
-        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-        res.end(`
-          <h2>Вы успешно записаны!</h2>
-          <a href="/">Вернуться на главную</a>
-        `);
+    const sql = `INSERT INTO appointments (name, phone, car, service, date, time, comment) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [data.name, data.phone, data.car, data.service, date, time, data.comment], (err) => {
+      if (err) {
+        res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
+        return res.end(`<h2>Ошибка: запись не сохранена</h2><a href="/">Назад</a>`);
       }
-    );
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<h2>Вы успешно записаны!</h2><a href="/">Вернуться на главную</a>`);
+    });
   });
 }
 
@@ -238,25 +213,17 @@ function loadAppointments(req, res) {
 // ==============================
 function updateStatus(req, res) {
   let body = "";
-
   req.on("data", (chunk) => (body += chunk));
   req.on("end", () => {
     const { id, status } = querystring.parse(body);
-
-    db.run(
-      `UPDATE appointments SET status = ? WHERE id = ?`,
-      [status, id],
-      () => {
-        res.writeHead(200);
-        res.end("OK");
-      }
-    );
+    db.run(`UPDATE appointments SET status = ? WHERE id = ?`, [status, id], () => {
+      res.writeHead(200);
+      res.end("OK");
+    });
   });
 }
 
 // ==============================
 // Запуск сервера
 // ==============================
-server.listen(PORT, () =>
-  console.log(`Сервер запущен: http://localhost:${PORT}`)
-);
+server.listen(PORT, () => console.log(`Сервер запущен: http://localhost:${PORT}`));
