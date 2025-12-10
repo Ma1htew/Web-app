@@ -74,18 +74,17 @@ header {
   flex-shrink: 0;
 }
 .brand__logo {
-  width: 32px; 
-  height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), #f43f5e);
-  display: grid; 
+  width: 44px;
+  height: 44px;
+  display: grid;
   place-items: center;
-  box-shadow: var(--shadow);
+  flex-shrink: 0;
 }
-.brand__logo svg { 
-  width: 18px; 
-  height: 18px; 
-  fill: #fff; 
+
+.brand__logo img {
+  width: 38px;
+  height: 38px;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.5));
 }
 .brand__name { 
   font-weight: 700; 
@@ -433,8 +432,16 @@ footer {
   .topbar { padding: 10px 0; gap: 8px; }
   .actions__icon { width: 36px; height: 36px; }
   .actions__icon svg { width: 17px; height: 17px; }
-  .brand__logo { width: 28px; height: 28px; }
-  .brand__logo svg { width: 16px; height: 16px; }
+  
+  .brand__logo { 
+    width: 36px; 
+    height: 36px; 
+    border-radius: 12px; 
+  }
+  .brand__logo i { 
+    font-size: 21px; 
+  }
+  
   .brand__name { font-size: 1rem; }
 }
 

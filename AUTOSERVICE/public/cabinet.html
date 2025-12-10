@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Личный кабинет — Автомастерская</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .cabinet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .user-greeting {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .info-card {
+      background: var(--panel);
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .booking-item {
+      background: var(--panel);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--accent);
+    }
+    .status-confirmed { color: #27ae60; }
+    .status-done { color: #f39c12; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container topbar" role="banner">
+    <div class="brand">
+      <a href="/" class="brand__name">Автомастерская</a>
+    </div>
+    <div class="actions">
+      <a href="/" class="btn">На главную</a>
+      <button id="logout-btn" class="logout-btn">Выйти</button>
+    </div>
+  </div>
+</header>
+
+<main class="container style="max-width: 900px; margin-top: 3rem;">
+  <div class="cabinet-header">
+    <h1 class="user-greeting">Добро пожаловать, <span id="user-name">Имя</span>!</h1>
+  </div>
+
+  <div class="grid grid--2" style="gap: 2rem;">
+    <section>
+      <h2>Ваши данные</h2>
+      <div class="info-card">
+        <p><strong>Имя:</strong> <span id="display-name">Загрузка...</span></p>
+        <p><strong>Телефон:</strong> <span id="display-phone">—</span></p>
+        <p><strong>Email:</strong> <span id="display-email">—</span></p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Мои записи</h2>
+      <div id="bookings-list">
+        <p style="color: var(--muted);">Нет активных записей</p>
+      </div>
+      <div style="margin-top: 1.5rem;">
+        <a href="/#booking" class="btn btn--primary">Записаться на сервис</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  // Защита страницы: если нет токена — редирект на логин
+  const token = localStorage.getItem("authToken");
+  if (!token) {
+    window.location.href = "/login.html";
+  }
+
+  // Загрузка данных пользователя
+  const userName = localStorage.getItem("userName") || "Клиент";
+  const userPhone = localStorage.getItem("userPhone") || "Не указан";
+  const userEmail = localStorage.getItem("userEmail") || "Не указан";
+
+  document.getElementById("user-name").textContent = userName;
+  document.getElementById("display-name").textContent = userName;
+  document.getElementById("display-phone").textContent = userPhone;
+  document.getElementById("display-email").textContent = userEmail;
+
+  // Пример записей (в реальности — с бэкенда)
+  const bookings = JSON.parse(localStorage.getItem("userBookings") || "[]");
+  const list = document.getElementById("bookings-list");
+
+  if (bookings.length === 0) {
+    list.innerHTML = `<p style="color: var(--muted);">У вас пока нет записей</p>`;
+  } else {
+    list.innerHTML = bookings.map(b => `
+      <div class="booking-item">
+        <strong>${b.service}</strong><br>
+        ${b.car} · ${b.date} в ${b.time} · 
+        <span class="${b.status === 'done' ? 'status-done' : 'status-confirmed'}">
+          ${b.status === 'done' ? 'Выполнено' : 'Подтверждено'}
+        </span>
+      </div>
+    `).join("");
+  }
+
+  // Выход
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    if (confirm("Выйти из аккаунта?")) {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userPhone");
+      localStorage.removeItem("userEmail");
+      window.location.href = "/";
+    }
+  });
+</script>
+
+</body>
+</html>
