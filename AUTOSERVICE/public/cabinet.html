@@ -68,25 +68,25 @@
         </div>
       </section>
 
-      <!-- Статистика — тоже динамически -->
-      <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:var(--primary);" id="active-count">0</strong><br>
-          <span style="color:var(--muted);">Активные записи</span>
-        </div>
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
-          <span style="color:var(--muted);">Завершённых визитов</span>
-        </div>
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
-          <span style="color:var(--muted);">Авто в профиле</span>
-        </div>
-        <div class="card" style="text-align:center; padding:1.5rem;">
-          <strong style="font-size:2rem; color:#f59e0b;">★ —</strong><br>
-          <span style="color:var(--muted);">Ваш рейтинг</span>
-        </div>
+    <!-- Статистика — тоже динамически -->
+    <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:var(--primary);" id="active-count">0</strong><br>
+        <span style="color:var(--muted);">Активные записи</span>
       </div>
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
+        <span style="color:var(--muted);">Завершённых визитов</span>
+      </div>
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
+        <span style="color:var(--muted);">Авто в профиле</span>
+      </div>
+      <div class="card" style="text-align:center; padding:1.5rem;">
+        <strong style="font-size:2rem; color:#f59e0b;">★ —</strong><br>
+        <span style="color:var(--muted);">Ваш рейтинг</span>
+      </div>
+    </div>
 
       <!-- Текущие записи — будут подгружаться из базы -->
       <section style="margin-bottom: 4rem;">
@@ -99,13 +99,6 @@
           <a href="auto.html#booking" class="btn btn--primary">Записаться на новую услугу</a>
         </p>
       </section>
-
-      <!-- Кнопка выхода
-      <div style="margin-top: 4rem; text-align:center;">
-        <a href="auth.html" id="logout-btn" style="color:var(--muted); text-decoration:underline; cursor:pointer;">
-          Выйти из личного кабинета
-        </a>
-      </div> -->
     </div>
   </main>
 
@@ -156,26 +149,26 @@
         const allAppointments = await apptRes.json();
         const myAppointments = allAppointments.filter(a => a.user_id == userId);
 
-        // Статистика
-        document.getElementById('active-count').textContent = myAppointments.filter(a => a.status !== 'completed').length;
-        document.getElementById('completed-count').textContent = myAppointments.filter(a => a.status === 'completed').length;
+    // Статистика
+    document.getElementById('active-count').textContent = myAppointments.filter(a => a.status !== 'completed').length;
+    document.getElementById('completed-count').textContent = myAppointments.filter(a => a.status === 'completed').length;
 
-        // Рендер записей
-        const list = document.getElementById('appointments-list');
-        list.innerHTML = myAppointments.length === 0 
-          ? '<p style="text-align:center; color:var(--muted);">У вас пока нет записей</p>'
-          : '';
+    // Рендер записей
+    const list = document.getElementById('appointments-list');
+    list.innerHTML = myAppointments.length === 0 
+      ? '<p style="text-align:center; color:var(--muted);">У вас пока нет записей</p>'
+      : '';
 
         myAppointments.forEach(a => {
           const date = new Date(a.date + 'T' + a.time);
           const formatted = date.toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-          const statusInfo = {
-            pending: ['Ожидает', 'status--waiting'],
-            'in-progress': ['В работе', 'status--in-progress'],
-            ready: ['Готово к выдаче', 'status--ready'],
-            completed: ['Выполнено', 'status--completed']
-          }[a.status] || ['Ожидает', 'status--waiting'];
+      const statusInfo = {
+        pending: ['Ожидает', 'status--waiting'],
+        'in-progress': ['В работе', 'status--in-progress'],
+        ready: ['Готово к выдаче', 'status--ready'],
+        completed: ['Выполнено', 'status--completed']
+      }[a.status] || ['Ожидает', 'status--waiting'];
 
           list.innerHTML += `
             <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">

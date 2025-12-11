@@ -76,6 +76,15 @@
   color: #eab308;
 }
 
+.status--rejected {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 .status.approved {
   background: #064e3b;
   color: #34d399;
@@ -95,6 +104,14 @@
   margin-top: 12px;
   display: flex;
   gap: 10px;
+}
+
+.btn--danger {
+  background: #ef4444;
+  color: white;
+}
+.btn--danger:hover {
+  background: #dc2626;
 }
 
 @media (max-width: 640px) {
