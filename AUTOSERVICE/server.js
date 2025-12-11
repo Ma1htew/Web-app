@@ -166,18 +166,33 @@ function handleRegister(req, res) {
   req.on("data", (chunk) => (body += chunk));
   req.on("end", () => {
     const { name, email, password } = querystring.parse(body);
+
+    // Простая валидация (можно расширить)
+    if (!name || !email || !password) {
+      res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
+      return res.end(`<h2>Заполните все поля</h2><a href="/auth.html">Назад</a>`);
+    }
+
     const sql = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
     db.run(sql, [name, email, password], function (err) {
       if (err) {
+        // Обычно это ошибка уникальности email
         res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
-        return res.end(`<h2>Ошибка регистрации: email уже используется</h2><a href="/auth">Назад</a>`);
+        return res.end(`<h2>Ошибка: email уже используется</h2><a href="/auth.html">Назад</a>`);
       }
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<h2>Регистрация успешна!</h2><a href="/auth">Перейти к входу</a>`);
+
+      // Успешная регистрация
+      const userId = this.lastID; // ID только что созданного пользователя
+
+      // Устанавливаем cookie и сразу редиректим на главную страницу
+      res.writeHead(302, {
+        "Set-Cookie": `user=${this.lastID}; Path=/; Max-Age=86400; SameSite=Lax`,
+        "Location": "/auto.html"   // ← сюда пользователь попадёт сразу после регистрации
+      });
+      res.end();
     });
   });
 }
-
 // ==============================
 // Авторизация
 // ==============================
@@ -194,7 +209,6 @@ function handleLogin(req, res) {
       }
       res.writeHead(302, {
         "Set-Cookie": [
-          `user=${user.id}; Path=/; Max-Age=86400; HttpOnly; SameSite=None`,
           `user=${user.id}; Path=/; Max-Age=86400; SameSite=Lax`
         ],
         "Location": "/cabinet.html",
@@ -203,6 +217,7 @@ function handleLogin(req, res) {
     });
   });
 }
+
 
 // ==============================
 // Проверка авторизации (cookie)
