@@ -10,24 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles/style.css"> <!-- подключи свои стили -->
-  <style>
-    :root {
-      --primary: #e11d48;
-      --muted: #64748b;
-      --bg: #f8fafc;
-    }
-    .profile-avatar {
-      width: 100px; height: 100px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #64748b;
-    }
-    .status {
-      padding: 4px 12px; border-radius: 999px; font-size: 0.875rem; font-weight: 600;
-    }
-    .status--waiting { background: #fef3c7; color: #92400e; }
-    .status--in-progress { background: #dbeafe; color: #1e40af; }
-    .status--ready { background: #d1fae5; color: #065f46; }
-    .status--completed { background: #f3f4f6; color: #374151; }
-  </style>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/cabinet.css">
 </head>
 
 <body>
@@ -151,14 +135,14 @@
   </footer>
 
 
-<script>
+<!-- <script>
   document.getElementById('logout-btn')?.addEventListener('click', e => {
     e.preventDefault();
     localStorage.setItem('isLoggedIn', 'false');  // важно!
     localStorage.removeItem('isLoggedIn');        // и это тоже
     window.location.replace('auth.html');
   });
-</script>
+</script> -->
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   const getCookie = name => (document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null);
