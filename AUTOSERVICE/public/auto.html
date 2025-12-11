@@ -189,10 +189,13 @@
             </select>
           </label>
 
-          <label for="car">
-            Автомобиль
-            <input id="car" name="car" type="text" placeholder="Марка и модель" required>
-          </label>
+         <label for="car-select">
+  Автомобиль
+  <select id="car-select" name="car" required style="display:none;">
+    <option value="" disabled selected>Выберите ваш автомобиль</option>
+  </select>
+  <input id="car-input" name="car" type="text" placeholder="Марка и модель (например: Toyota Camry)" required>
+</label>
 
           <label for="dateTime">
             Дата и время
@@ -288,5 +291,59 @@
   <script src="/scripts/app.js" defer></script>
   <script src="/scripts/main.js"></script>
   <script src="/scripts/auth-check.js"></script>
+  <script>
+// Подтягиваем авто пользователя при загрузке формы записи (только если авторизован)
+document.addEventListener("DOMContentLoaded", async () => {
+  const carSelect = document.getElementById("car-select");
+  const carInput = document.getElementById("car-input");
+  if (!carSelect || !carInput) return;
+
+  // Проверяем куку
+  const getCookie = name => (document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null);
+  const userId = getCookie('user');
+
+  if (!userId) {
+    // Не авторизован — оставляем только input
+    carInput.style.display = "block";
+    carSelect.style.display = "none";
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/cars?user_id=${userId}`);
+    const cars = await res.json();
+
+    if (cars.length === 0) {
+      carInput.placeholder = "У вас пока нет авто · Добавьте в кабинете";
+      carInput.style.display = "block";
+      carSelect.style.display = "none";
+      return;
+    }
+
+    // Заполняем select
+    carSelect.innerHTML = `<option value="" disabled selected>Выберите автомобиль</option>`;
+    cars.forEach(car => {
+      const opt = document.createElement("option");
+      opt.value = `${car.brand} ${car.model} (${car.year})`;
+      opt.textContent = `${car.brand} ${car.model} ${car.year} г.`;
+      carSelect.appendChild(opt);
+    });
+
+    // Показываем select, прячем input
+    carSelect.style.display = "block";
+    carInput.style.display = "none";
+
+    // Если выбрали авто — оно подставится в форму
+    carSelect.addEventListener("change", () => {
+      if (carSelect.value) carInput.value = carSelect.value;
+    });
+
+  } catch (err) {
+    console.log("Не удалось загрузить авто пользователя");
+    carInput.style.display = "block";
+    carSelect.style.display = "none";
+  }
+});
+</script>
 </body>
 </html>

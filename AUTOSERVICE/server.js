@@ -95,6 +95,48 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
+  // === API: Получить авто пользователя ===
+if (req.url.startsWith("/api/cars") && req.method === "GET") {
+  const userId = new URL(req.url, `http://localhost:${PORT}`).searchParams.get("user_id");
+  if (!userId) return res.end(JSON.stringify([]));
+  db.all("SELECT id, brand, model, year FROM cars WHERE user_id = ?", [userId], (err, rows) => {
+    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+    res.end(JSON.stringify(rows || []));
+  });
+  return;
+}
+
+// === API: Добавить авто ===
+if (req.url === "/api/car" && req.method === "POST") {
+  let body = "";
+  req.on("data", chunk => body += chunk);
+  req.on("end", () => {
+    const cookie = req.headers.cookie || "";
+    const userId = cookie.match(/user=(\d+)/)?.[1];
+    if (!userId) return res.writeHead(401).end();
+
+    const { brand, model, year } = querystring.parse(body);
+    db.run("INSERT INTO cars (user_id, brand, model, year) VALUES (?, ?, ?, ?)", 
+      [userId, brand, model, year], function() {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ success: true, id: this.lastID }));
+    });
+  });
+  return;
+}
+
+// === API: Удалить авто ===
+if (req.method === "DELETE" && req.url.match(/^\/api\/car\/\d+$/)) {
+  const carId = req.url.split("/").pop();
+  const userId = (req.headers.cookie || "").match(/user=(\d+)/)?.[1];
+  if (!userId) return res.writeHead(401).end();
+
+  db.run("DELETE FROM cars WHERE id = ? AND user_id = ?", [carId, userId], function() {
+    res.writeHead(this.changes ? 200 : 403);
+    res.end();
+  });
+  return;
+}
 
   // ---------- 404 ----------
   res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
@@ -203,10 +245,22 @@ function handleBooking(req, res) {
     const match = cookie.match(/user=(\d+)/);
     const userId = match ? match[1] : null;
 
-    const sql = `
-      INSERT INTO appointments (user_id, name, phone, car, service, date, time, comment, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
-    `;
+    let carString = data.car || "";
+
+// Если пришёл объект из формы (авторизованный пользователь выбрал авто)
+if (typeof carString === 'object' && carString !== null) {
+  // Пример: {"brand":"Toyota","model":"Camry","year":"2023"}
+  carString = `${data.car.brand} ${data.car.model} (${data.car.year})`.trim();
+}
+// Если просто строка — оставляем как есть
+else if (typeof carString === 'string') {
+  carString = carString.trim();
+}
+
+const sql = `
+  INSERT INTO appointments (user_id, name, phone, car, service, date, time, comment, status)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+`;
 
     db.run(
       sql,
@@ -214,7 +268,7 @@ function handleBooking(req, res) {
         userId || null,
         data.name || "",
         data.phone || "",
-        data.car || "",
+        carString || "",
         data.service || "",
         date,
         time,

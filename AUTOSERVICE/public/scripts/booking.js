@@ -1,45 +1,47 @@
-// public/scripts/booking.js
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("booking-form");
   if (!form) return;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+    if (!form.checkValidity()) return form.reportValidity();
 
     const button = form.querySelector('button[type="submit"]');
     const oldText = button.textContent;
     button.disabled = true;
     button.textContent = "Отправляем...";
 
-    // Собираем данные в формате x-www-form-urlencoded
-    const params = new URLSearchParams();
-    for (const [key, value] of new FormData(form)) {
-      params.append(key, value);
+    const formData = new FormData(form);
+    
+    // Важно: car всегда строка!
+    let carValue = formData.get("car");
+    if (carValue && carValue.includes("{") && carValue.includes("}")) {
+      // Это был JSON-объект — превращаем в строку
+      try {
+        const obj = JSON.parse(carValue);
+        carValue = `${obj.brand} ${obj.model} (${obj.year})`;
+      } catch(e) {}
     }
+    formData.set("car", carValue.trim() || "Не указано");
+
+    const params = new URLSearchParams(formData);
 
     try {
-      const response = await fetch("/booking", {
+      const res = await fetch("/booking", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: params // ← вот здесь теперь правильный формат
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params
       });
 
-      if (response.ok) {
-        alert("Вы успешно записаны! Мы свяжемся с вами скоро.");
+      if (res.ok) {
+        alert("Вы успешно записаны!");
         form.reset();
+        // Можно обновить список авто в кабинете, если открыт
       } else {
-        alert("Ошибка сервера. Попробуйте позже.");
+        alert("Ошибка записи");
       }
     } catch (err) {
-      console.error(err);
-      alert("Нет связи с сервером. Позвоните нам пожалуйста.");
+      alert("Нет связи с сервером");
     } finally {
       button.disabled = false;
       button.textContent = oldText;

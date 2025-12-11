@@ -78,16 +78,23 @@
         <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
         <span style="color:var(--muted);">Завершённые заказы</span>
       </div>
-      <div class="card" style="text-align:center; padding:1.5rem;">
-        <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
-        <span style="color:var(--muted);">Мои авто</span>
-      </div>
+      <div class="card" style="text-align:center; padding:1.5rem; cursor:pointer;" id="my-cars-card">
+    <strong style="font-size:2rem; color:#2563eb;" id="cars-count">0</strong><br>
+    <span style="color:var(--muted);">Мои авто</span>
+  </div>
       <div class="card" style="text-align:center; padding:1.5rem;">
         <strong style="font-size:2rem; color:#dc2626;" id="rejected-count">0</strong><br>
         <span style="color:var(--muted);">Отказанные заказы</span>
       </div>
     </div>
-
+<section style="margin-bottom: 4rem;">
+  <h2 style="margin-bottom: 1.5rem;">Мои автомобили</h2>
+  <div id="cars-container" class="grid grid--3" style="gap: 1.5rem;">
+    <div class="card" style="display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:140px;border:2px dashed var(--border);" id="add-car-btn">
+      <span style="font-size:4rem;color:var(--muted);font-weight:200;">+</span>
+    </div>
+  </div>
+</section>
       <!-- Текущие записи — будут подгружаться из базы -->
       <section style="margin-bottom: 4rem;">
         <h2 style="margin-bottom: 1.5rem;">Текущие и предстоящие записи</h2>
@@ -192,7 +199,7 @@ document.getElementById('completed-count').textContent = myAppointments.filter(a
           list.innerHTML += `
             <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
               <div>
-                <strong>${a.car}</strong><br>
+               <strong>${typeof a.car === 'object' ? 'Автомобиль удалён' : (a.car || 'Не указано')}</strong><br>
                 <time>${formatted}</time> • ${a.service}
                 ${a.comment ? `<br><small style="color:var(--muted);">${a.comment}</small>` : ''}
               </div>
@@ -202,6 +209,54 @@ document.getElementById('completed-count').textContent = myAppointments.filter(a
             </article>
           `;
         });
+
+        // === Мои автомобили ===
+      const carsRes = await fetch(`/api/cars?user_id=${userId}`);
+      const cars = await carsRes.json();
+      document.getElementById('cars-count').textContent = cars.length;
+
+      const container = document.getElementById('cars-container');
+
+      cars.forEach(car => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.style.cssText = 'padding:1.5rem;position:relative;';
+        div.innerHTML = `
+          <button style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.8rem;cursor:pointer;opacity:0.7;" 
+                  data-id="${car.id}">×</button>
+          <strong>${car.brand} ${car.model}</strong><br>
+          <small style="color:var(--muted);">${car.year} г.</small>
+        `;
+        container.insertBefore(div, document.getElementById('add-car-btn'));
+      });
+
+      // Кнопка добавления
+      document.getElementById('add-car-btn').onclick = () => 
+        document.getElementById('car-modal').style.display = 'flex';
+
+      document.getElementById('cancel-car').onclick = () => 
+        document.getElementById('car-modal').style.display = 'none';
+
+      document.getElementById('car-form').onsubmit = async e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        await fetch('/api/car', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(fd)
+        });
+        location.reload();
+      };
+
+      // Удаление
+      document.querySelectorAll('#cars-container button[data-id]').forEach(btn => {
+        btn.onclick = async () => {
+          if (confirm('Удалить автомобиль?')) {
+            await fetch(`/api/car/${btn.dataset.id}`, { method: 'DELETE' });
+            location.reload();
+          }
+        };
+      });
 
       } catch (err) {
         console.error(err);
@@ -220,5 +275,20 @@ document.getElementById('completed-count').textContent = myAppointments.filter(a
       // иначе просто переход в кабинет или на auth.html (по href)
     });
   </script>
+<!-- Модальное окно добавления авто -->
+<div id="car-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center;">
+  <div class="card" style="width:90%;max-width:400px;padding:2rem;">
+    <h3>Добавить автомобиль</h3>
+    <form id="car-form">
+      <input type="text" name="brand" placeholder="Марка" required style="width:100%;padding:0.8rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:6px;">
+      <input type="text" name="model" placeholder="Модель" required style="width:100%;padding:0.8rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:6px;">
+      <input type="number" name="year" placeholder="Год" min="1950" max="2030" required style="width:100%;padding:0.8rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:6px;">
+      <div style="margin-top:1.5rem;text-align:right;">
+        <button type="button" id="cancel-car" style="margin-right:0.5rem;">Отмена</button>
+        <button type="submit" class="btn btn--primary">Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>
