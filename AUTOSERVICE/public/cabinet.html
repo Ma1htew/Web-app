@@ -46,69 +46,66 @@
         <a href="auto.html#booking" class="actions__icon" aria-label="Записаться">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
         </a>
-        <a href="auth.html" class="actions__icon" aria-label="Личный кабинет" id="cabinet-link">
-  <!-- Иконка по умолчанию — "вход" -->
-  <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
-    <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
-  </svg>
-</a>
+        <a href="cabinet.html" class="actions__icon" aria-label="Личный кабинет" id="cabinet-link">
+          <!-- По умолчанию иконка профиля -->
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24">
+            <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
+          </svg>
+        </a>
       </div>
     </div>
   </header>
 
   <main id="main" tabindex="-1" style="padding-top: 3rem; padding-bottom: 4rem; background: var(--bg); min-height: 80vh;">
-  <div class="container">
+    <div class="container">
 
-    <!-- Приветствие — будет заполняться динамически -->
-    <section class="grid grid--2" style="align-items: center; margin-bottom: 3rem; gap: 2rem;">
-      <div class="profile-avatar" id="user-avatar">?</div>
-      <div>
-        <h1 style="margin:0; font-size: 2rem;" id="welcome-name">Загрузка...</h1>
-        <p style="color:var(--muted); margin: 0.5rem 0 0;" id="user-contact">• • •</p>
-      </div>
-    </section>
+      <!-- Приветствие — будет заполняться динамически -->
+      <section class="grid grid--2" style="align-items: center; margin-bottom: 3rem; gap: 2rem;">
+        <div class="profile-avatar" id="user-avatar">?</div>
+        <div>
+          <h1 style="margin:0; font-size: 2rem;" id="welcome-name">Загрузка...</h1>
+          <p style="color:var(--muted); margin: 0.5rem 0 0;" id="user-contact">• • •</p>
+        </div>
+      </section>
 
-    <!-- Статистика — тоже динамически -->
-    <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
-      <div class="card" style="text-align:center; padding:1.5rem;">
-        <strong style="font-size:2rem; color:var(--primary);" id="active-count">0</strong><br>
-        <span style="color:var(--muted);">Активные записи</span>
-      </div>
-      <div class="card" style="text-align:center; padding:1.5rem;">
-        <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
-        <span style="color:var(--muted);">Завершённых визитов</span>
-      </div>
-      <div class="card" style="text-align:center; padding:1.5rem;">
-        <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
-        <span style="color:var(--muted);">Авто в профиле</span>
-      </div>
-      <div class="card" style="text-align:center; padding:1.5rem;">
-        <strong style="font-size:2rem; color:#f59e0b;">★ —</strong><br>
-        <span style="color:var(--muted);">Ваш рейтинг</span>
-      </div>
-    </div>
-
-    <!-- Текущие записи — будут подгружаться из базы -->
-    <section style="margin-bottom: 4rem;">
-      <h2 style="margin-bottom: 1.5rem;">Текущие и предстоящие записи</h2>
-      <div id="appointments-list" class="grid grid--1" style="gap: 1rem;">
-        <p style="text-align:center; color:var(--muted);">Загрузка ваших записей...</p>
+      <!-- Статистика — тоже динамически -->
+      <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
+        <div class="card" style="text-align:center; padding:1.5rem;">
+          <strong style="font-size:2rem; color:var(--primary);" id="active-count">0</strong><br>
+          <span style="color:var(--muted);">Активные записи</span>
+        </div>
+        <div class="card" style="text-align:center; padding:1.5rem;">
+          <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
+          <span style="color:var(--muted);">Завершённых визитов</span>
+        </div>
+        <div class="card" style="text-align:center; padding:1.5rem;">
+          <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
+          <span style="color:var(--muted);">Авто в профиле</span>
+        </div>
+        <div class="card" style="text-align:center; padding:1.5rem;">
+          <strong style="font-size:2rem; color:#f59e0b;">★ —</strong><br>
+          <span style="color:var(--muted);">Ваш рейтинг</span>
+        </div>
       </div>
 
-      <p style="text-align:center; margin-top:2rem;">
-        <a href="auto.html#booking" class="btn btn--primary">Записаться на новую услугу</a>
-      </p>
-    </section>
+      <!-- Текущие записи — будут подгружаться из базы -->
+      <section style="margin-bottom: 4rem;">
+        <h2 style="margin-bottom: 1.5rem;">Текущие и предстоящие записи</h2>
+        <div id="appointments-list" class="grid grid--1" style="gap: 1rem;">
+          <p style="text-align:center; color:var(--muted);">Загрузка ваших записей...</p>
+        </div>
 
-    <!-- Кнопка выхода -->
-    <div style="margin-top: 4rem; text-align:center;">
-      <a href="auth.html" id="logout-btn" style="color:var(--muted); text-decoration:underline; cursor:pointer;">
-        Выйти из личного кабинета
-      </a>
-    </div>
-  </div>
-</main>
+        <p style="text-align:center; margin-top:2rem;">
+          <a href="auto.html#booking" class="btn btn--primary">Записаться на новую услугу</a>
+        </p>
+      </section>
 
+      <!-- Кнопка выхода
+      <div style="margin-top: 4rem; text-align:center;">
+        <a href="auth.html" id="logout-btn" style="color:var(--muted); text-decoration:underline; cursor:pointer;">
+          Выйти из личного кабинета
+        </a>
+      </div> -->
     </div>
   </main>
 
@@ -134,87 +131,82 @@
     </div>
   </footer>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const getCookie = name => (document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null);
+      const userId = getCookie('user');
 
-<!-- <script>
-  document.getElementById('logout-btn')?.addEventListener('click', e => {
-    e.preventDefault();
-    localStorage.setItem('isLoggedIn', 'false');  // важно!
-    localStorage.removeItem('isLoggedIn');        // и это тоже
-    window.location.replace('auth.html');
-  });
-</script> -->
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const getCookie = name => (document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null);
-  const userId = getCookie('user');
+      if (!userId) {
+        alert('Вы не авторизованы');
+        window.location.href = 'auth.html';
+        return;
+      }
 
-  if (!userId) {
-    alert('Вы не авторизованы');
-    window.location.href = 'auth.html';
-    return;
-  }
+      try {
+        // Получаем пользователя
+        const userRes = await fetch(`/api/user?id=${userId}`);
+        const user = await userRes.json();
 
-  try {
-    // Получаем пользователя
-    const userRes = await fetch(`/api/user?id=${userId}`);
-    const user = await userRes.json();
+        document.getElementById('welcome-name').textContent = `Добро пожаловать, ${user.name}!`;
+        document.getElementById('user-contact').textContent = user.email;
+        document.getElementById('user-avatar').textContent = user.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
 
-    document.getElementById('welcome-name').textContent = `Добро пожаловать, ${user.name}!`;
-    document.getElementById('user-contact').textContent = user.email;
-    document.getElementById('user-avatar').textContent = user.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+        // Получаем ВСЕ записи и фильтруем по user_id
+        const apptRes = await fetch('/api/appointments');
+        const allAppointments = await apptRes.json();
+        const myAppointments = allAppointments.filter(a => a.user_id == userId);
 
-    // Получаем ВСЕ записи и фильтруем по user_id
-    const apptRes = await fetch('/api/appointments');
-    const allAppointments = await apptRes.json();
-    const myAppointments = allAppointments.filter(a => a.user_id == userId);
+        // Статистика
+        document.getElementById('active-count').textContent = myAppointments.filter(a => a.status !== 'completed').length;
+        document.getElementById('completed-count').textContent = myAppointments.filter(a => a.status === 'completed').length;
 
-    // Статистика
-    document.getElementById('active-count').textContent = myAppointments.filter(a => a.status !== 'completed').length;
-    document.getElementById('completed-count').textContent = myAppointments.filter(a => a.status === 'completed').length;
+        // Рендер записей
+        const list = document.getElementById('appointments-list');
+        list.innerHTML = myAppointments.length === 0 
+          ? '<p style="text-align:center; color:var(--muted);">У вас пока нет записей</p>'
+          : '';
 
-    // Рендер записей
-    const list = document.getElementById('appointments-list');
-    list.innerHTML = myAppointments.length === 0 
-      ? '<p style="text-align:center; color:var(--muted);">У вас пока нет записей</p>'
-      : '';
+        myAppointments.forEach(a => {
+          const date = new Date(a.date + 'T' + a.time);
+          const formatted = date.toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-    myAppointments.forEach(a => {
-      const date = new Date(a.date + 'T' + a.time);
-      const formatted = date.toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+          const statusInfo = {
+            pending: ['Ожидает', 'status--waiting'],
+            'in-progress': ['В работе', 'status--in-progress'],
+            ready: ['Готово к выдаче', 'status--ready'],
+            completed: ['Выполнено', 'status--completed']
+          }[a.status] || ['Ожидает', 'status--waiting'];
 
-      const statusInfo = {
-        pending: ['Ожидает', 'status--waiting'],
-        'in-progress': ['В работе', 'status--in-progress'],
-        ready: ['Готово к выдаче', 'status--ready'],
-        completed: ['Выполнено', 'status--completed']
-      }[a.status] || ['Ожидает', 'status--waiting'];
+          list.innerHTML += `
+            <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+              <div>
+                <strong>${a.car}</strong><br>
+                <time>${formatted}</time> • ${a.service}
+                ${a.comment ? `<br><small style="color:var(--muted);">${a.comment}</small>` : ''}
+              </div>
+              <div style="text-align:right;">
+                <span class="status ${statusInfo[1]}">${statusInfo[0]}</span>
+              </div>
+            </article>
+          `;
+        });
 
-      list.innerHTML += `
-        <article class="card" style="padding:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-          <div>
-            <strong>${a.car}</strong><br>
-            <time>${formatted}</time> • ${a.service}
-            ${a.comment ? `<br><small style="color:var(--muted);">${a.comment}</small>` : ''}
-          </div>
-          <div style="text-align:right;">
-            <span class="status ${statusInfo[1]}">${statusInfo[0]}</span>
-          </div>
-        </article>
-      `;
+      } catch (err) {
+        console.error(err);
+        alert('Ошибка соединения с сервером');
+      }
     });
 
-  } catch (err) {
-    console.error(err);
-    alert('Ошибка соединения с сервером');
-  }
-});
-
-// Выход
-document.getElementById('logout-btn')?.addEventListener('click', e => {
-  e.preventDefault();
-  document.cookie = 'user=; Max-Age=0; path=/';
-  window.location.replace('auth.html');
-});
-</script>
+    // Выход
+    document.getElementById('cabinet-link')?.addEventListener('click', e => {
+      // Если мы на странице cabinet.html — выходим
+      if (window.location.pathname.includes('cabinet.html')) {
+        e.preventDefault();
+        document.cookie = 'user=; Max-Age=0; path=/';
+        window.location.replace('auto.html');
+      }
+      // иначе просто переход в кабинет или на auth.html (по href)
+    });
+  </script>
 </body>
 </html>
