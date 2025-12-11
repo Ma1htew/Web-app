@@ -185,19 +185,63 @@ function handleBooking(req, res) {
   req.on("data", (chunk) => (body += chunk));
   req.on("end", () => {
     const data = querystring.parse(body);
-    const [date, time] = data.date.split("T");
-    const sql = `INSERT INTO appointments (name, phone, car, service, date, time, comment) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    db.run(sql, [data.name, data.phone, data.car, data.service, date, time, data.comment], (err) => {
-      if (err) {
-        res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
-        return res.end(`<h2>Ошибка: запись не сохранена</h2><a href="/">Назад</a>`);
+
+    // Теперь поле называется dateTime (из input datetime-local)
+    let date = "";
+    let time = "";
+
+    if (data.dateTime && data.dateTime.includes("T")) {
+      [date, time] = data.dateTime.split("T");
+      time = time.slice(0, 5); // обрезаем секунды и таймзону
+    } else if (data.date) {
+      // старый вариант — если вдруг остался
+      [date, time] = data.date.split("T");
+    }
+
+    // Получаем user_id из cookie
+    const cookie = req.headers.cookie || "";
+    const match = cookie.match(/user=(\d+)/);
+    const userId = match ? match[1] : null;
+
+    const sql = `
+      INSERT INTO appointments (user_id, name, phone, car, service, date, time, comment, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    `;
+
+    db.run(
+      sql,
+      [
+        userId || null,
+        data.name || "",
+        data.phone || "",
+        data.car || "",
+        data.service || "",
+        date,
+        time,
+        data.comment || ""
+      ],
+      function (err) {
+        if (err) {
+          console.error("Ошибка записи в БД:", err);
+          res.writeHead(500, { "Content-Type": "text/html; charset=utf-8" });
+          return res.end(`<h2>Ошибка записи</h2><a href="/auto.html">Назад</a>`);
+        }
+
+        // После успешной записи — сразу в кабинет!
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(`
+          <h2 style="text-align:center; margin-top: 50px;">Вы успешно записаны!</h2>
+          <p style="text-align:center;">
+            <a href="/cabinet.html" style="color:#e11d48; font-weight:600;">Перейти в личный кабинет →</a>
+          </p>
+          <script>
+            setTimeout(() => location.href = "/cabinet.html", 2000);
+          </script>
+        `);
       }
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(`<h2>Вы успешно записаны!</h2><a href="/">Вернуться на главную</a>`);
-    });
+    );
   });
 }
-
 // ==============================
 // API: получить все записи
 // ==============================

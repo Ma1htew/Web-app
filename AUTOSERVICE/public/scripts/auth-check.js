@@ -1,11 +1,17 @@
-// scripts/auth-check.js — РАБОТАЕТ НА 100%
+// scripts/auth-check.js — РАБОТАЕТ ТОЛЬКО С COOKIE (убираем localStorage!)
 (() => {
   const link = document.getElementById('cabinet-link');
   if (!link) return;
 
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  // Функция получения cookie
+  const getCookie = (name) => {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+  };
 
-  if (isLoggedIn) {
+  const userId = getCookie('user');
+
+  if (userId) {
     // Залогинен — ведём в кабинет + иконка профиля
     link.href = 'cabinet.html';
     link.innerHTML = `
