@@ -19,14 +19,16 @@ function renderCards(list) {
 
   list.forEach(item => {
     const statusInfo = {
-      pending: { text: "В ожидании", class: "status--waiting" },
-      "in-progress": { text: "В работе", class: "status--in-progress" },
-      ready: { text: "Готово к выдаче", class: "status--ready" },
-      completed: { text: "Выполнено", class: "status--completed" }
-    }[item.status] || { text: "В ожидании", class: "status--waiting" };
+      pending:      { text: "Ожидает",          class: "status--waiting" },
+      "in-progress":{ text: "В работе",         class: "status--in-progress" },
+      ready:        { text: "Готово к выдаче",  class: "status--ready" },
+      completed:    { text: "Выполнено",        class: "status--completed" },
+      rejected:     { text: "Отказано",         class: "status--rejected" }  
+    }[item.status] || { text: "Ожидает", class: "status--waiting" };
 
     const card = document.createElement("div");
     card.className = "appointment-card";
+
     card.innerHTML = `
       <div class="card-header">
         <div class="card-name">${item.name || "Без имени"}</div>
@@ -43,7 +45,7 @@ function renderCards(list) {
           <button class="btn btn--primary" onclick="setStatus(${item.id}, 'in-progress')">
             Взять в работу
           </button>
-          <button class="btn btn--ghost" onclick="setStatus(${item.id}, 'rejected')">
+          <button class="btn btn--danger" onclick="setStatus(${item.id}, 'rejected')">
             Отказать
           </button>
         ` : item.status === "in-progress" ? `
@@ -52,9 +54,11 @@ function renderCards(list) {
           </button>
         ` : item.status === "ready" ? `
           <button class="btn btn--success" onclick="setStatus(${item.id}, 'completed')">
-            Выдано
+            Выдано клиенту
           </button>
-        ` : `<span style="color:#888; font-style:italic;">Действие завершено</span>`}
+        ` : `
+          <span style="color:#888; font-style:italic;">Действие завершено</span>
+        `}
       </div>
     `;
     container.appendChild(card);
