@@ -72,19 +72,19 @@
     <div class="grid grid--4" style="margin-bottom: 3rem; gap: 1rem;">
       <div class="card" style="text-align:center; padding:1.5rem;">
         <strong style="font-size:2rem; color:var(--primary);" id="active-count">0</strong><br>
-        <span style="color:var(--muted);">Активные записи</span>
-      </div>
+        <span style="color:var(--muted);">Активные заказы</span>
+      </div>  
       <div class="card" style="text-align:center; padding:1.5rem;">
         <strong style="font-size:2rem; color:#16a34a;" id="completed-count">0</strong><br>
-        <span style="color:var(--muted);">Завершённых визитов</span>
+        <span style="color:var(--muted);">Завершённые заказы</span>
       </div>
       <div class="card" style="text-align:center; padding:1.5rem;">
         <strong style="font-size:2rem; color:#2563eb;">0</strong><br>
-        <span style="color:var(--muted);">Авто в профиле</span>
+        <span style="color:var(--muted);">Мои авто</span>
       </div>
       <div class="card" style="text-align:center; padding:1.5rem;">
-        <strong style="font-size:2rem; color:#f59e0b;">★ —</strong><br>
-        <span style="color:var(--muted);">Ваш рейтинг</span>
+        <strong style="font-size:2rem; color:#dc2626;" id="rejected-count">0</strong><br>
+        <span style="color:var(--muted);">Отказанные заказы</span>
       </div>
     </div>
 
@@ -150,8 +150,26 @@
         const myAppointments = allAppointments.filter(a => a.user_id == userId);
 
     // Статистика
-    document.getElementById('active-count').textContent = myAppointments.filter(a => a.status !== 'completed').length;
-    document.getElementById('completed-count').textContent = myAppointments.filter(a => a.status === 'completed').length;
+    const activeAppointments = myAppointments.filter(a => 
+      !['ready', 'completed', 'rejected'].includes(a.status)
+    );
+    const completedAppointments = myAppointments.filter(a => 
+      ['ready', 'completed'].includes(a.status)
+    );
+    const rejectedAppointments = myAppointments.filter(a => 
+      a.status === 'rejected'
+    );
+
+    document.getElementById('active-count').textContent = activeAppointments.length;
+    document.getElementById('completed-count').textContent = completedAppointments.length;
+    document.getElementById('rejected-count').textContent = rejectedAppointments.length;
+
+// Завершённые визиты — только "Готово к выдаче" и "Выполнено"
+// Отказано — НЕ считается завершённым!
+document.getElementById('completed-count').textContent = myAppointments.filter(a => 
+  a.status === 'ready' || 
+  a.status === 'completed'
+).length;
 
     // Рендер записей
     const list = document.getElementById('appointments-list');
@@ -166,6 +184,7 @@
       const statusInfo = {
         pending: ['Ожидает', 'status--waiting'],
         'in-progress': ['В работе', 'status--in-progress'],
+        rejected: ['Отказано', 'status--rejected'],
         ready: ['Готово к выдаче', 'status--ready'],
         completed: ['Выполнено', 'status--completed']
       }[a.status] || ['Ожидает', 'status--waiting'];
