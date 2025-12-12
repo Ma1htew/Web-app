@@ -222,7 +222,6 @@
   </div>
 </section>
 
-<script src="/scripts/booking.js"></script>
 <script src="/scripts/auth-check.js" defer></script>
 
           <aside id="contacts" aria-labelledby="aside-contact-title">
@@ -291,57 +290,61 @@
   <script src="/scripts/app.js" defer></script>
   <script src="/scripts/main.js"></script>
   <script src="/scripts/auth-check.js"></script>
+  <script src="/scripts/booking.js"></script>
   <script>
-// Подтягиваем авто пользователя при загрузке формы записи (только если авторизован)
 document.addEventListener("DOMContentLoaded", async () => {
   const carSelect = document.getElementById("car-select");
   const carInput = document.getElementById("car-input");
-  if (!carSelect || !carInput) return;
+  const nameInput = document.getElementById("name");  // ← поле имени в форме
 
-  // Проверяем куку
-  const getCookie = name => (document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null);
+  if (!carSelect || !carInput || !nameInput) return;
+
+  const getCookie = name => document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || null;
   const userId = getCookie('user');
 
-  if (!userId) {
-    // Не авторизован — оставляем только input
-    carInput.style.display = "block";
-    carSelect.style.display = "none";
-    return;
-  }
+  // По умолчанию — обычный input для неавторизованных
+  carInput.style.display = "block";
+  carSelect.style.display = "none";
+  carSelect.removeAttribute("required");
 
-  try {
-    const res = await fetch(`/api/cars?user_id=${userId}`);
-    const cars = await res.json();
+  if (userId) {
+    try {
+      // 1. Получаем данные пользователя (имя)
+      const userRes = await fetch(`/api/user?id=${userId}`);
+      const user = await userRes.json();
 
-    if (cars.length === 0) {
-      carInput.placeholder = "У вас пока нет авто · Добавьте в кабинете";
-      carInput.style.display = "block";
-      carSelect.style.display = "none";
-      return;
+      if (user && user.name) {
+        nameInput.value = user.name;           // ← подставляем имя
+        nameInput.setAttribute("readonly", ""); // опционально: делаем поле нередактируемым
+      }
+
+      // 2. Получаем автомобили
+      const carsRes = await fetch(`/api/cars?user_id=${userId}`);
+      const cars = await carsRes.json();
+
+      if (cars.length === 0) {
+        carInput.placeholder = "У вас пока нет авто · Добавьте в кабинете";
+      } else {
+        carSelect.innerHTML = `<option value="" disabled selected>Выберите автомобиль</option>`;
+        cars.forEach(car => {
+          const opt = document.createElement("option");
+          opt.value = `${car.brand} ${car.model} (${car.year})`;
+          opt.textContent = `${car.brand} ${car.model} ${car.year} г.`;
+          carSelect.appendChild(opt);
+        });
+
+        carSelect.style.display = "block";
+        carInput.style.display = "none";
+        carSelect.setAttribute("required", "");
+
+        carSelect.addEventListener("change", () => {
+          if (carSelect.value) carInput.value = carSelect.value;
+        });
+      }
+    } catch (err) {
+      console.error("Ошибка загрузки данных пользователя:", err);
+      // Если ошибка — оставляем поля пустыми
     }
-
-    // Заполняем select
-    carSelect.innerHTML = `<option value="" disabled selected>Выберите автомобиль</option>`;
-    cars.forEach(car => {
-      const opt = document.createElement("option");
-      opt.value = `${car.brand} ${car.model} (${car.year})`;
-      opt.textContent = `${car.brand} ${car.model} ${car.year} г.`;
-      carSelect.appendChild(opt);
-    });
-
-    // Показываем select, прячем input
-    carSelect.style.display = "block";
-    carInput.style.display = "none";
-
-    // Если выбрали авто — оно подставится в форму
-    carSelect.addEventListener("change", () => {
-      if (carSelect.value) carInput.value = carSelect.value;
-    });
-
-  } catch (err) {
-    console.log("Не удалось загрузить авто пользователя");
-    carInput.style.display = "block";
-    carSelect.style.display = "none";
   }
 });
 </script>
