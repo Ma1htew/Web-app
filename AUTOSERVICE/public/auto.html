@@ -145,23 +145,23 @@
       </div>
     </section>
 
-    <section id="reviews" aria-labelledby="reviews-title">
-      <div class="container">
-        <h2 id="reviews-title">Отзывы клиентов</h2>
-        <div class="grid grid--2">
-          <article class="card review" aria-label="Отзыв Анна">
-            <div class="stars" aria-hidden="true">★★★★★</div>
-            <p>Очень быстро приняли и сделали замену масла. Цены адекватные, персонал вежливый.</p>
-            <footer>Анна · <time datetime="2025-09-10">10 сен 2025</time></footer>
-          </article>
-          <article class="card review" aria-label="Отзыв Дмитрий">
-            <div class="stars" aria-hidden="true">★★★★☆</div>
-            <p>Диагностика помогла найти проблему с электрикой. Удобная запись онлайн.</p>
-            <footer>Дмитрий · <time datetime="2025-08-29">29 авг 2025</time></footer>
-          </article>
+   <section id="reviews" aria-labelledby="reviews-title">
+  <div class="container">
+    <h2 id="reviews-title">Отзывы клиентов</h2>
+
+    <div class="reviews-carousel">
+      <button class="carousel__prev" aria-label="Предыдущие отзывы" disabled>‹</button>
+
+      <div class="carousel__viewport">
+        <div class="carousel__track grid grid--3" id="reviews-track">
+          <p style="grid-column: 1 / -1; text-align:center; color:var(--muted);">Загрузка отзывов...</p>
         </div>
       </div>
-    </section>
+
+      <button class="carousel__next" aria-label="Следующие отзывы" disabled>›</button>
+    </div>
+  </div>
+</section>
 
     <section id="booking" aria-labelledby="booking-title">
   <div class="container">
@@ -345,6 +345,79 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Ошибка загрузки данных пользователя:", err);
       // Если ошибка — оставляем поля пустыми
     }
+  }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const track = document.getElementById("reviews-track");
+  const prevBtn = document.querySelector(".carousel__prev");
+  const nextBtn = document.querySelector(".carousel__next");
+  if (!track) return;
+
+  let currentSlide = 0;
+  const slidesCount = 2; // 0, 1, 2 — всего 3 слайда (по 3 отзыва)
+
+  const updateButtons = () => {
+    prevBtn.disabled = currentSlide === 0;
+    nextBtn.disabled = currentSlide === slidesCount;
+  };
+
+  const goToSlide = (slide) => {
+    currentSlide = Math.max(0, Math.min(slide, slidesCount));
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    updateButtons();
+  };
+
+  prevBtn.addEventListener("click", () => goToSlide(currentSlide - 1));
+  nextBtn.addEventListener("click", () => goToSlide(currentSlide + 1));
+
+  try {
+    // Запрашиваем последние 9 отзывов
+    const response = await fetch("/api/reviews?limit=9");
+    const reviews = await response.json();
+
+    track.innerHTML = ""; // Очищаем сообщение о загрузке
+
+    if (reviews.length === 0) {
+      track.innerHTML = '<p style="grid-column: 1 / -1; text-align:center; color:var(--muted);">Пока нет отзывов</p>';
+      prevBtn.style.display = nextBtn.style.display = "none";
+      return;
+    }
+
+    reviews.forEach(review => {
+      const starsFilled = '★'.repeat(review.rating || 0);
+      const starsEmpty = '☆'.repeat(5 - (review.rating || 0));
+      const dateObj = new Date(review.review_date);
+      const formattedDate = dateObj.toLocaleDateString('ru-RU', {
+        day: 'numeric', month: 'short', year: 'numeric'
+      });
+
+      const reviewEl = document.createElement("article");
+      reviewEl.className = "card review";
+      reviewEl.setAttribute("aria-label", `Отзыв ${review.name}`);
+      reviewEl.innerHTML = `
+        <div class="stars" aria-hidden="true" style="font-size:1.2rem; color:#fbbf24;">
+          ${starsFilled}${starsEmpty}
+        </div>
+        <p>${review.review_text || ''}</p>
+        <footer>${review.name} · <time datetime="${review.review_date}">${formattedDate}</time></footer>
+      `;
+
+      track.appendChild(reviewEl);
+    });
+
+    // Если отзывов меньше 3 — скрываем стрелки
+    if (reviews.length <= 3) {
+      prevBtn.style.display = nextBtn.style.display = "none";
+    } else {
+      prevBtn.style.display = nextBtn.style.display = "flex";
+    }
+
+    updateButtons();
+  } catch (error) {
+    console.error("Ошибка загрузки отзывов:", error);
+    track.innerHTML = '<p style="grid-column: 1 / -1; text-align:center; color:var(--muted);">Не удалось загрузить отзывы</p>';
   }
 });
 </script>

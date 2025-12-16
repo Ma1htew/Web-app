@@ -458,6 +458,73 @@ footer {
   transform: translateY(-4px); 
 }
 
+/* Карусель отзывов — стрелки снаружи, не перекрывают карточки */
+.reviews-carousel {
+  position: relative;
+  margin: 3rem 0;
+  padding: 0 60px; /* Отступы по бокам для стрелок, чтобы они были полностью снаружи */
+  max-width: 100%;
+}
+
+.carousel__viewport {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.carousel__track {
+  display: grid;
+  grid-template-columns: repeat(9, calc((100% - 3rem) / 3)); /* Точно 3 видимых, с учётом gap */
+  gap: 1.5rem;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Стрелки — полностью снаружи, по центру вертикально */
+.carousel__prev,
+.carousel__next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px); /* Лёгкий блюр для красоты на тёмной теме */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  transition: all 0.3s;
+}
+
+.carousel__prev { left: 0; } /* Слева снаружи */
+.carousel__next { right: 0; } /* Справа снаружи */
+
+.carousel__prev:hover,
+.carousel__next:hover {
+  background: var(--accent, #e11d48); /* Твой акцентный цвет */
+  transform: translateY(-50%) scale(1.15);
+}
+
+.carousel__prev:disabled,
+.carousel__next:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: rgba(0,0,0,0.5);
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .reviews-carousel { padding: 0 50px; }
+  .carousel__track {
+    grid-template-columns: repeat(9, 100%);
+  }
+}
+
 @media (max-width: 640px) {
   .actions > .btn { display: none !important; }
   .actions__icon { display: grid !important; }

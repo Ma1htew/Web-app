@@ -106,6 +106,92 @@ if (req.url.startsWith("/api/cars") && req.method === "GET") {
   return;
 }
 
+// ---------- API: Добавить/обновить отзыв ----------
+if (req.url === "/api/review" && req.method === "POST") {
+  let body = "";
+  req.on("data", chunk => body += chunk);
+  req.on("end", () => {
+    const parsed = querystring.parse(body);
+    const id = parsed.id;
+    const text = (parsed.text || "").trim();
+    const rating = parseInt(parsed.rating);
+
+    const cookie = req.headers.cookie || "";
+    const userIdMatch = cookie.match(/user=(\d+)/);
+    const userId = userIdMatch ? userIdMatch[1] : null;
+
+    // Валидация
+    if (!userId || !id || !text || isNaN(rating) || rating < 1 || rating > 5) {
+      res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+      return res.end(JSON.stringify({ error: "Некорректные данные" }));
+    }
+
+    // Проверяем владение заказом и статус
+    db.get(
+      "SELECT id FROM appointments WHERE id = ? AND user_id = ? AND status IN ('ready', 'completed')",
+      [id, userId],
+      (err, appt) => {
+        if (err || !appt) {
+          res.writeHead(403, { "Content-Type": "application/json; charset=utf-8" });
+          return res.end(JSON.stringify({ error: "Доступ запрещён или заказ не завершён" }));
+        }
+
+        const reviewDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+        db.run(
+          "UPDATE appointments SET review_text = ?, rating = ?, review_date = ? WHERE id = ?",
+          [text, rating, reviewDate, id],
+          function (err) {
+            if (err) {
+              console.error("Ошибка сохранения отзыва:", err);
+              res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+              return res.end(JSON.stringify({ error: "Ошибка сервера" }));
+            }
+            res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+            res.end(JSON.stringify({ success: true }));
+          }
+        );
+      }
+    );
+  });
+  return;
+}
+
+// ---------- API: Получить последние отзывы (для главной страницы) ----------
+if (req.url.startsWith("/api/reviews") && req.method === "GET") {
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const limit = parseInt(url.searchParams.get("limit")) || 9; // По умолчанию 9
+
+  db.all(
+    `
+    SELECT 
+      a.review_text, 
+      a.rating, 
+      a.review_date, 
+      u.name 
+    FROM appointments a 
+    JOIN users u ON a.user_id = u.id 
+    WHERE a.review_text IS NOT NULL 
+      AND a.review_text != '' 
+      AND a.rating IS NOT NULL
+    ORDER BY a.review_date DESC 
+    LIMIT ?
+    `,
+    [limit],
+    (err, rows) => {
+      if (err) {
+        console.error("Ошибка загрузки отзывов:", err);
+        res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
+        return res.end(JSON.stringify({ error: "Database error" }));
+      }
+
+      res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify(rows || []));
+    }
+  );
+  return;
+}
+
 // === API: Добавить авто ===
 if (req.url === "/api/car" && req.method === "POST") {
   let body = "";

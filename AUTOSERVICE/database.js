@@ -24,7 +24,7 @@ db.serialize(() => {
     )
   `);
 
-  // 2. Таблица записей (сразу создаём с полем user_id)
+  // 2. Таблица записей
   db.run(`
     CREATE TABLE IF NOT EXISTS appointments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,23 +37,38 @@ db.serialize(() => {
       time TEXT,
       comment TEXT,
       status TEXT DEFAULT 'pending',
+      review_text TEXT,
+      rating INTEGER,
+      review_date TEXT,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
 
-  // 3. Если в старой базе уже была таблица appointments без user_id — добавляем его
-  // (ошибка "duplicate column name" игнорируется)
-  db.run(`
-    ALTER TABLE appointments ADD COLUMN user_id INTEGER
-  `, (err) => {
+  // 3. Совместимость со старыми базами: добавляем user_id, если его нет
+  db.run(`ALTER TABLE appointments ADD COLUMN user_id INTEGER`, (err) => {
     if (err && !err.message.includes('duplicate column name')) {
       console.error('Ошибка добавления столбца user_id:', err.message);
-    } else {
+    } else if (!err || err.message.includes('duplicate column name')) {
       console.log('Столбец user_id проверен/добавлен');
     }
   });
 
-  // 4. Таблица автомобилей
+  // 4. Добавляем поля для отзывов (безопасно)
+  const addColumn = (columnSql, columnName) => {
+    db.run(columnSql, (err) => {
+      if (err && !err.message.includes('duplicate column name')) {
+        console.error(`Ошибка добавления столбца ${columnName}:`, err.message);
+      } else if (!err || err.message.includes('duplicate column name')) {
+        console.log(`Столбец ${columnName} проверен/добавлен`);
+      }
+    });
+  };
+
+  addColumn(`ALTER TABLE appointments ADD COLUMN review_text TEXT`, 'review_text');
+  addColumn(`ALTER TABLE appointments ADD COLUMN rating INTEGER`, 'rating');
+  addColumn(`ALTER TABLE appointments ADD COLUMN review_date TEXT`, 'review_date');
+
+  // 5. Таблица автомобилей
   db.run(`
     CREATE TABLE IF NOT EXISTS cars (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
