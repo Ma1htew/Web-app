@@ -20,14 +20,14 @@
   <!-- Шапка такая же, как на главной, только активна иконка кабинета -->
   <header>
     <div class="container topbar" role="banner">
-      <div class="brand">
-        <span class="brand__logo" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="34" height="40" fill="#e11d48">
-            <path d="M22.5,14H1.5a7.109,7.109,0,0,1,.423-.88L3.98,9.52A5.013,5.013,0,0,1,8.321,7h7.358A5.011,5.011,0,0,1,20.02,9.52l2.057,3.6A7.116,7.116,0,0,1,22.5,14ZM19,16v1a1,1,0,0,1-2,0V16H7v1a1,1,0,0,1-2,0V16H1.026Q1,16.3,1,16.594V18a4,4,0,0,0,2,3.463V22a2,2,0,0,0,4,0H17a2,2,0,0,0,4,0v-.537A4,4,0,0,0,23,18V16.594q0-.3-.026-.594ZM23,4H22a1,1,0,0,1,0-2h1c.673,0,.625-.448.493-.649A3.015,3.015,0,0,0,18.167,2H5.845A3.015,3.015,0,0,0,.519,1.351C0,2.283,1.926,1.939,2.012,2a1,1,0,0,1,0,2h-1c-.673,0-.625.448-.493.649A3.015,3.015,0,0,0,5.845,4H18.167a3.015,3.015,0,0,0,5.326.649C23.625,4.448,23.673,4,23,4Z"/>
-          </svg>
-        </span>
-        <span class="brand__name">Автомастерская</span>
-      </div>
+      <a href="auto.html" class="brand" aria-label="Перейти на главную страницу">
+  <span class="brand__logo" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="34" height="40" fill="#e11d48">
+      <path d="M22.5,14H1.5a7.109,7.109,0,0,1,.423-.88L3.98,9.52A5.013,5.013,0,0,1,8.321,7h7.358A5.011,5.011,0,0,1,20.02,9.52l2.057,3.6A7.116,7.116,0,0,1,22.5,14ZM19,16v1a1,1,0,0,1-2,0V16H7v1a1,1,0,0,1-2,0V16H1.026Q1,16.3,1,16.594V18a4,4,0,0,0,2,3.463V22a2,2,0,0,0,4,0H17a2,2,0,0,0,4,0v-.537A4,4,0,0,0,23,18V16.594q0-.3-.026-.594ZM23,4H22a1,1,0,0,1,0-2h1c.673,0,.625-.448.493-.649A3.015,3.015,0,0,0,18.167,2H5.845A3.015,3.015,0,0,0,.519,1.351C0,2.283,1.926,1.939,2.012,2a1,1,0,0,1,0,2h-1c-.673,0-.625.448-.493.649A3.015,3.015,0,0,0,5.845,4H18.167a3.015,3.015,0,0,0,5.326.649C23.625,4.448,23.673,4,23,4Z"/>
+    </svg>
+  </span>
+  <span class="brand__name">Автомастерская</span>
+</a>
 
       <nav aria-label="Основная навигация">
         <ul>
@@ -122,6 +122,7 @@
           <li><a href="auto.html#pricing">Цены</a></li>
           <li><a href="auto.html#booking">Бронирование</a></li>
           <li><a href="auto.html#reviews">Отзывы</a></li>
+          <li><a href="auto.html#contacts">Контакты</a></li>
           <li><a href="auto.html#contacts">Контакты</a></li>
         </ul>
       </nav>
@@ -308,7 +309,7 @@ document.querySelectorAll('.review-form').forEach(form => {
         div.className = 'card';
         div.style.cssText = 'padding:1.5rem;position:relative;';
         div.innerHTML = `
-          <button style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.8rem;cursor:pointer;opacity:0.7;" 
+          <button style="position:absolute;top:8px;right:12px;background:none;border:none;font-size:1.8rem;cursor:pointer;opacity:0.7;color:#9aa3af;" 
                   data-id="${car.id}">×</button>
           <strong>${car.brand} ${car.model}</strong><br>
           <small style="color:var(--muted);">${car.year} г.</small>
@@ -362,19 +363,59 @@ document.querySelectorAll('.review-form').forEach(form => {
     });
   </script>
 <!-- Модальное окно добавления авто -->
-<div id="car-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center;">
-  <div class="card" style="width:90%;max-width:400px;padding:2rem;">
-    <h3>Добавить автомобиль</h3>
+<div id="car-modal" style="display:none; position:fixed; inset:0; background:rgba(13, 15, 18, 0.9); z-index:100; 
+      flex-direction:column; align-items:center; justify-content:center;">
+  
+  <div style="width:100%; max-width:380px; background:#12161b; padding:2rem; border-radius:24px; 
+              box-sizing:border-box; box-shadow:0 20px 25px -5px rgba(30, 27, 27, 0.3);">
+    
+    <h3 style="color:var(--text); font-size:1.5rem; margin-bottom:1.5rem; text-align:center;">
+      Добавить автомобиль
+    </h3>
+    
     <form id="car-form">
-      <input type="text" name="brand" placeholder="Марка" required style="width:100%;padding:0.8rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:6px;">
-      <input type="text" name="model" placeholder="Модель" required style="width:100%;padding:0.8rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:6px;">
-      <input type="number" name="year" placeholder="Год" min="1950" max="2030" required style="width:100%;padding:0.8rem;margin:0.5rem 0;border:1px solid #ccc;border-radius:6px;">
-      <div style="margin-top:1.5rem;text-align:right;">
-        <button type="button" id="cancel-car" style="margin-right:0.5rem;">Отмена</button>
-        <button type="submit" class="btn btn--primary">Добавить</button>
+      <!-- Марка -->
+      <div style="margin-bottom:1rem;">
+        <label style="color:var(--muted); font-size:0.875rem; margin-bottom:0.5rem; display:block;">Марка</label>
+        <input type="text" name="brand" placeholder="Марка" required 
+               style="width:100%; padding:1rem; background: #0d0f12; border:1px solid var(--border)  ; border-radius:12px; 
+                      color:var(--text); font-size:1rem;">
+      </div>
+      
+      <!-- Модель -->
+      <div style="margin-bottom:1rem;">
+        <label style="color:var(--muted); font-size:0.875rem; margin-bottom:0.5rem; display:block;">Модель</label>
+        <input type="text" name="model" placeholder="Модель" required 
+               style="width:100%; padding:1rem; background:#0d0f12; border:1px solid var(--border); border-radius:12px; 
+                      color:white; font-size:1rem;">
+      </div>
+      
+      <!-- Год -->
+      <div style="margin-bottom:2rem;">
+        <label style="color:var(--muted); font-size:0.875rem; margin-bottom:0.5rem; display:block;">Год</label>
+        <input type="number" name="year" placeholder="Год" min="1950" max="2030" required 
+               style="width:100%; padding:1rem; background:#0d0f12; border:1px solid var(--border); border-radius:12px; 
+                      color:white; font-size:1rem;">
+      </div>
+      
+      <!-- Кнопки -->
+      <div style="display:flex; gap:1rem; justify-content:flex-end;">
+        <button type="button" id="cancel-car"
+                style="padding:0.9rem 1.8rem; background:transparent; border:1px solid #475569; 
+                       color:#cbd5e1; border-radius:12px; font-size:1rem; cursor:pointer;">
+          Отмена
+        </button>
+        <button type="submit"
+                style="padding:0.9rem 1.8rem; background:var(--primary); color:white; border:none; 
+                       border-radius:999px; font-size:1rem; font-weight:600; cursor:pointer;">
+          Добавить
+        </button>
       </div>
     </form>
   </div>
 </div>
+
+
+
 </body>
 </html>
